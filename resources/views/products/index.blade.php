@@ -1,6 +1,6 @@
 <h1>Products Page Working</h1>
 
-@if($products->count() == 0)
+@if($products->isEmpty())
 
     <p>No Products Found</p>
 
@@ -13,7 +13,12 @@
 <tr>
     <th>Name</th>
     <th>Brand</th>
+    <th>Categories</th>
+    <th>Price</th>
+    <th>Stock</th>
     <th>Status</th>
+    <th>Images</th>
+    <th>Actions</th>
 </tr>
 
 
@@ -30,13 +35,41 @@
         {{ $product->brand->name ?? 'No Brand' }}
     </td>
 
+    <td>
+        @foreach($product->categories as $category)
+            {{ $category->name }}<br>
+        @endforeach
+    </td>
+
+    <td>
+       {{ $product->productItems->first()->price ?? 'N/A' }}
+    </td>
+
+    <td>
+       {{ $product->productItems->first()->stock ?? 'N/A' }}
+    </td>
 
     <td>
         {{ $product->status ? 'Active' : 'Inactive' }}
     </td>
 
-</tr>
+    <td>
+        @if($product->productImages->isNotEmpty())
 
+                <img src="{{ asset('storage/' . $product->productImages->first()->image_path) }}" alt="Product Image" width="50">
+      
+        @else
+            No Images
+        @endif
+    </td>
+    <td>
+        <a href="{{ route('products.edit', $product->id) }}">Edit</a>
+        <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
+            @csrf
+            @method('DELETE')
+            <button type="submit">Delete</button>
+        </form>
+    </td>
 @endforeach
 
 

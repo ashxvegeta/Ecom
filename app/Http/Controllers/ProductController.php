@@ -19,10 +19,14 @@ class ProductController extends Controller
     public function index()
     {
         //
-        $products = Product::with( 'brand',
+        $products = Product::with( 
+        ['brand',
         'categories',
         'productImages',
-        'productItems')->get();
+        'productItems'])->get();
+        
+
+
         return view('products.index',compact('products'));
     }
 
