@@ -199,5 +199,14 @@ $categories = Category::all();
     public function destroy(string $id)
     {
         //
+        $product = Product::findOrFail($id);
+        // database se delete karne se pehle, pehle image paths ko variable mein save karo
+        $imagepath =  $product->productImages()->pluck('image_path')->toArray();
+        $product->productImages()->delete();
+        // ab storage se delete karo
+        Storage::disk('public')->delete($imagepath);
+        // ab product ko delete karo
+        $product->delete();
+        return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }
 }
