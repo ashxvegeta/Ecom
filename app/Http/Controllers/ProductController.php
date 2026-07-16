@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Actions\Product\CreateProductAction;
 use App\Http\Requests\StoreProductRequest;
+use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Models\Product;
 use App\Models\Brand;
 use App\Models\Category;
@@ -16,6 +18,12 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function __construct(private ProductRepositoryInterface $productRepository)
+    {
+        // Dependency injection of the ProductRepositoryInterface
+    }
+
     public function index()
     {
         //
@@ -44,55 +52,13 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-        public function store(StoreProductRequest $request)
+        public function store(StoreProductRequest $request, CreateProductAction $action)
     {
 
-        DB::transaction(function() use ($request) {
-           
-            $slug = Str::slug($request->name);
-
-            if (Product::where('slug', $slug)->exists()) {
-                $slug = $slug . '-' . time();
-            }
-
-            $product = Product::create([
-                'name' => $request->name,
-                'slug' => $slug,
-                'brand_id' => $request->brand_id,
-                'short_description' => $request->short_description,
-                'description' => $request->description,
-                'status' => $request->status,
-                'featured' => $request->featured ?? 0,
-            ]);
-
-            // Product Item
-            $product->productItems()->create([
-                'sku' => $request->sku,
-                'price' => $request->price,
-                'stock' => $request->stock,
-                'status' => 1,
-            ]);
-
-            // Categories
-            if($request->category_ids) {
-            
-                $product->categories()->attach($request->category_ids);
-            }
-
-            // Product Images
-            if($request->hasFile('images')){
-          
-                foreach($request->file('images') as $index => $image){
-                    $path = $image->store('products', 'public');
-                    $product->productImages()->create([
-                        'image_path' => $path,
-                        'sort_order' => $index + 1,
-                    ]);
-                }
-            }
-        });
+       $action->execute($request->validated(), $request->file('images'), $request->category_ids);
 
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
+        
 
     }
 

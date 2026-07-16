@@ -1,6 +1,6 @@
 <h1>Create Brand</h1>
 
-<form action="{{ route('brands.store') }}" method="POST">
+<form action="{{ route('brands.store') }}" method="POST" enctype="multipart/form-data">
 
     @csrf
 
@@ -11,8 +11,10 @@
         <option value="0">Inactive</option>
     </select>
 
-    <button type="submit">
-        Save
-    </button>
+    <input type="file" name="logo">
+    <input type="submit" value="Create Brand">
+</form>
+
+ 
 
 </form>
