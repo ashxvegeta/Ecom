@@ -39,16 +39,14 @@ class ProductRepository  implements  ProductRepositoryInterface{
 
         return $product; // ← ADD KARO YAHAN
     }
-    
-    public function updateProduct(int $id , array $data): bool
-    {
-        $product = Product::find($id);
-        if (!$product) {
-            return false;
-        }
-        return $product->update($data);
-    }   
 
+    
+    
+    public function updateProduct(Product $product, array $data): Product
+{
+    $product->update($data);
+    return $product; // ← $product return karo, update() ka result nahi
+}
     public function deleteProduct(int $id): bool
     {
         $product = Product::find($id);

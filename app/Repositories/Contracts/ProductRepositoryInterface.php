@@ -11,6 +11,6 @@ interface ProductRepositoryInterface
     public function getAllProducts(): Collection;
     public function getProductById(int $id): ?Product;
     public function createProduct(array $data): Product;
-    public function updateProduct(int $id, array $data): bool;
+    public function updateProduct(Product $product, array $data): Product;
     public function deleteProduct(int $id): bool;
 }

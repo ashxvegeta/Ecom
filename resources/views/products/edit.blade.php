@@ -1,6 +1,15 @@
 <div class="max-w-4xl mx-auto p-6">
     <h1 class="text-2xl font-bold text-gray-800 mb-6">Edit Product</h1>
 
+
+    @if ($errors->any())
+    <ul>
+        @foreach ($errors->all() as $error)
+            <li style="color:red;">{{ $error }}</li>
+        @endforeach
+    </ul>
+@endif
+
     <form action="{{ route('products.update', $products->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -48,7 +57,7 @@
    {{-- Category Multi Select --}}
 <div>
     <label class="block text-sm font-medium text-gray-700 mb-1">Categories</label>
-    <select name="categories[]" multiple class="w-full border border-gray-300 rounded-lg px-3 py-2">
+    <select name="category_ids[]" multiple class="w-full border border-gray-300 rounded-lg px-3 py-2">
         @foreach($categories as $category)
             <option value="{{ $category->id }}"
                 {{ in_array($category->id, $products->categories->pluck('id')->toArray()) ? 'selected' : '' }}>
