@@ -7,6 +7,7 @@ use App\Actions\Product\CreateProductAction;
 use App\Http\Requests\UpdateProductRequest;
 use App\Actions\Product\UpdateProductAction;
 use App\Http\Requests\StoreProductRequest;
+use App\Actions\Product\DeleteProductAction;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Models\Product;
 use App\Models\Brand;
@@ -121,17 +122,12 @@ $categories = Category::all();
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(DeleteProductAction $action, string $id)
     {
         //
         $product = Product::findOrFail($id);
         // database se delete karne se pehle, pehle image paths ko variable mein save karo
-        $imagepath =  $product->productImages()->pluck('image_path')->toArray();
-        $product->productImages()->delete();
-        // ab storage se delete karo
-        Storage::disk('public')->delete($imagepath);
-        // ab product ko delete karo
-        $product->delete();
+        $action->execute($product);
         return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }
 }

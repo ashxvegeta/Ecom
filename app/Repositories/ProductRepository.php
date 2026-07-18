@@ -47,13 +47,11 @@ class ProductRepository  implements  ProductRepositoryInterface{
     $product->update($data);
     return $product; // ← $product return karo, update() ka result nahi
 }
-    public function deleteProduct(int $id): bool
+
+    public function deleteProduct(Product $product): void
     {
-        $product = Product::find($id);
-        if (!$product) {
-            return false;
-        }
-        return $product->delete();
+            $product->delete();
     }
+  
 
 }
