@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Brand;
 use App\Http\Requests\StoreBrandRequest;
+use Illuminate\Support\Facades\Storage;
 
 class BrandController extends Controller
 {
@@ -14,6 +15,9 @@ class BrandController extends Controller
     public function index()
     {
         //
+
+        $brands = Brand::all();
+        return view('brands.index', compact('brands'));
     }
 
     /**
@@ -30,22 +34,22 @@ class BrandController extends Controller
      */
     public function store(StoreBrandRequest $request)
     {
-        
-        // $brand = Brand::create([
-        //     'name' => $request->name,
-        //     'status' => $request->status,
-        // ]);    
-        // // Product Images
-        // if($request->hasFile('logo')){
 
-        //     $image = $request->file('logo');
-        //     $path = $image->store('brands', 'public');
-        //     $brand->update([
-        //         'logo' => $path,
-        //     ]);
+        $brand = Brand::create([
+            'name' => $request->name,
+            'status' => $request->status,
+        ]);    
+        // Product Images
+        if($request->hasFile('logo')){
+
+            $image = $request->file('logo');
+            $path = $image->store('brands', 'public');
+            $brand->update([
+                'logo' => $path,
+            ]);
             
-        // }
-        // return redirect()->route('brands.create')->with('success', 'Brand created successfully.');
+        }
+        return redirect()->route('brands.create')->with('success', 'Brand created successfully.');
 
     }
 
@@ -55,6 +59,10 @@ class BrandController extends Controller
     public function show(string $id)
     {
         //
+
+       
+        $brands = Brand::findOrFail($id);
+        return view('brands.show', compact('brands'));
     }
 
     /**
@@ -63,6 +71,11 @@ class BrandController extends Controller
     public function edit(string $id)
     {
         //
+
+        $brands = Brand::findOrFail($id);
+        
+
+        return view('brands.edit', compact('brands'));
     }
 
     /**
@@ -71,6 +84,32 @@ class BrandController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $brand = Brand::findOrFail($id);
+        $brand->update([
+            'name' => $request->name,
+            'status' => $request->status,
+        ]);
+        // Product Images
+
+
+
+        if($request->hasFile('logo')){
+        
+            if($brand->logo) {
+                // Delete the old image from storage
+                Storage::disk('public')->delete($brand->logo);
+            }
+
+            $image = $request->file('logo');
+            $path = $image->store('brands', 'public');
+            $brand->update([
+                'logo' => $path,
+            ]);
+            
+        }
+
+return redirect()->route('brands.edit', $brand->id)->with('success', 'Brand updated successfully.');
+
     }
 
     /**
@@ -79,5 +118,13 @@ class BrandController extends Controller
     public function destroy(string $id)
     {
         //
+
+        $brand = Brand::findOrFail($id);
+        if($brand->logo) {
+            // Delete the old image from storage
+            Storage::disk('public')->delete($brand->logo);
+        }
+        $brand->delete();
+        return redirect()->route('brands.index')->with('success', 'Brand deleted successfully.');
     }
 }
