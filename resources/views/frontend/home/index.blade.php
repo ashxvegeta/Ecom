@@ -90,7 +90,7 @@
 
         </div>
         <div class="text-center mt-4">
-            <a href="#" class="btn btn-dark btn-lg" style="border-radius: 25px; padding: 12px 45px; font-size: 15px;">
+            <a href="/products" class="btn btn-dark btn-lg" style="border-radius: 25px; padding: 12px 45px;">
                 View All Products
             </a>
         </div>

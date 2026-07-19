@@ -13,19 +13,19 @@
 
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="color: #f5f5f7; font-size: 14px;">Home</a>
+                    <a class="nav-link" href="/" style="color: #f5f5f7; font-size: 14px;">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="color: #f5f5f7; font-size: 14px;">Products</a>
+                    <a class="nav-link" href="/products" style="color: #f5f5f7; font-size: 14px;">Products</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="color: #f5f5f7; font-size: 14px;">Mobiles</a>
+                    <a class="nav-link" href="/mobiles" style="color: #f5f5f7; font-size: 14px;">Mobiles</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="color: #f5f5f7; font-size: 14px;">Laptops</a>
+                    <a class="nav-link" href="/laptops" style="color: #f5f5f7; font-size: 14px;">Laptops</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="color: #f5f5f7; font-size: 14px;">Accessories</a>
+                    <a class="nav-link" href="/accessories" style="color: #f5f5f7; font-size: 14px;">Accessories</a>
                 </li>
             </ul>
 
