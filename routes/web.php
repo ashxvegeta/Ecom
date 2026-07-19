@@ -26,6 +26,10 @@ Route::get('/checkout', function () {
     return view('frontend.checkout.index');
 });
 
+Route::get('/orders', function () {
+    return view('frontend.orders.index');
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
