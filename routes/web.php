@@ -18,6 +18,10 @@ Route::get('/products/{id}', function ($id) {
     return view('frontend.products.show');
 });
 
+Route::get('/cart', function () {
+    return view('frontend.cart.index');
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
