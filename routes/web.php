@@ -26,6 +26,9 @@ Route::get('/checkout', function () {
     return view('frontend.checkout.index');
 });
 
+Route::get('/orders/{id}', function ($id) {
+    return view('frontend.orders.show');
+});
 Route::get('/orders', function () {
     return view('frontend.orders.index');
 });
