@@ -4,11 +4,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Frontend\HomeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('frontend.home.index');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/products-list', function () {
     return view('frontend.products.index');

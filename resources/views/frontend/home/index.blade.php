@@ -22,42 +22,14 @@
         <h2 class="text-center font-weight-bold mb-2" style="color: #1d1d1f; font-size: 32px;">Shop by Category</h2>
         <p class="text-center mb-5" style="color: #86868b; font-size: 16px;">Find exactly what you're looking for</p>
         <div class="row justify-content-center">
-
+           @foreach($categories as $category)
             <div class="col-md-2 col-4 text-center mb-4">
                 <div class="p-4 bg-white shadow-sm" style="border-radius: 20px; cursor: pointer; transition: transform 0.2s;">
-                    <div style="font-size: 40px;">📱</div>
-                    <p class="mt-2 mb-0" style="font-size: 13px; color: #1d1d1f; font-weight: 600;">Mobiles</p>
+                    <div style="font-size: 40px;"> <img src="{{ asset('storage/' . $category->image) }}" alt="Category Image" width="100" style="height:53px;width:70px;"></div>
+                    <p class="mt-2 mb-0" style="font-size: 13px; color: #1d1d1f; font-weight: 600;">{{ $category->name }}</p>
                 </div>
             </div>
-
-            <div class="col-md-2 col-4 text-center mb-4">
-                <div class="p-4 bg-white shadow-sm" style="border-radius: 20px; cursor: pointer;">
-                    <div style="font-size: 40px;">💻</div>
-                    <p class="mt-2 mb-0" style="font-size: 13px; color: #1d1d1f; font-weight: 600;">Laptops</p>
-                </div>
-            </div>
-
-            <div class="col-md-2 col-4 text-center mb-4">
-                <div class="p-4 bg-white shadow-sm" style="border-radius: 20px; cursor: pointer;">
-                    <div style="font-size: 40px;">🖥️</div>
-                    <p class="mt-2 mb-0" style="font-size: 13px; color: #1d1d1f; font-weight: 600;">Monitors</p>
-                </div>
-            </div>
-
-            <div class="col-md-2 col-4 text-center mb-4">
-                <div class="p-4 bg-white shadow-sm" style="border-radius: 20px; cursor: pointer;">
-                    <div style="font-size: 40px;">⌨️</div>
-                    <p class="mt-2 mb-0" style="font-size: 13px; color: #1d1d1f; font-weight: 600;">Keyboards</p>
-                </div>
-            </div>
-
-            <div class="col-md-2 col-4 text-center mb-4">
-                <div class="p-4 bg-white shadow-sm" style="border-radius: 20px; cursor: pointer;">
-                    <div style="font-size: 40px;">🎧</div>
-                    <p class="mt-2 mb-0" style="font-size: 13px; color: #1d1d1f; font-weight: 600;">Accessories</p>
-                </div>
-            </div>
-
+            @endforeach
         </div>
     </div>
 </section>
@@ -69,24 +41,25 @@
         <p class="text-center mb-5" style="color: #86868b; font-size: 16px;">Handpicked for you</p>
         <div class="row">
 
-            @for($i = 1; $i <= 4; $i++)
+            @foreach($featured_products as $featured_product)
             <div class="col-md-3 mb-4">
                 <div class="card border-0 shadow-sm h-100" style="border-radius: 20px; overflow: hidden;">
                     <div style="background: #f5f5f7; padding: 20px; text-align: center;">
-                        <img src="https://via.placeholder.com/250x180/f5f5f7/1d1d1f?text=Product" 
-                             class="img-fluid" style="border-radius: 12px;">
+                        @if($featured_product->productImages->isNotEmpty())
+    <img src="{{ asset('storage/' . $featured_product->productImages->first()->image_path) }}"  style="height:150px;width:150px;">
+@endif
                     </div>
                     <div class="card-body p-4">
-                        <p style="color: #86868b; font-size: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">Apple</p>
-                        <h6 class="font-weight-bold" style="color: #1d1d1f; font-size: 16px;">iPhone 16 Pro</h6>
-                        <p class="font-weight-bold mt-2" style="color: #1d1d1f; font-size: 18px;">₹1,29,999</p>
+                        <p style="color: #86868b; font-size: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">{{$featured_product->brand->name}}</p>
+                        <h6 class="font-weight-bold" style="color: #1d1d1f; font-size: 16px;">{{$featured_product->name}}</h6>
+                        <p class="font-weight-bold mt-2" style="color: #1d1d1f; font-size: 18px;">{{ formatPrice($featured_product->productItems->first()->price) }}</p>
                         <button class="btn btn-dark btn-block mt-2" style="border-radius: 25px; font-size: 14px;">
                             Add to Cart
                         </button>
                     </div>
                 </div>
             </div>
-            @endfor
+            @endforeach
 
         </div>
         <div class="text-center mt-4">

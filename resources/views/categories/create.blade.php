@@ -8,7 +8,15 @@
 <body>
 
 
-
+@if ($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <ul class="list-disc ml-5">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     <h1>Create Category</h1>
     <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -27,7 +35,7 @@
         <div>
             <label for="parent_id">Parent Category:</label>
             <select name="parent_id" id="parent_id">
-                <option value="none">None</option>
+                <option value="">-- No Parent --</option>
                 @foreach($parents as $parent)
                     <option value="{{ $parent->id }}">{{ $parent->name }}</option>
                 @endforeach
