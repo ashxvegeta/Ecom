@@ -79,10 +79,23 @@ class ProductController extends Controller
     public function edit(string $id)
     {
         //
-        $products = Product::with( ['brand','categories','productImages','productItems'])->where('id', $id)->first();
-        $brands = Brand::all();
-        $categories = Category::all();
-        return view('products.edit',compact('products','brands','categories'));
+
+
+$products = Product::with( 
+        ['brand',
+        'categories',
+        'productImages',
+        'productItems'])->where('id', $id)->first();
+
+$brands = Brand::all();
+$categories = Category::all();
+
+
+// echo "<pre>";
+//     print_r($products->toArray()); // Debugging line to check the price value
+
+ return view('products.edit',compact('products','brands','categories'));
+
 
     }
 

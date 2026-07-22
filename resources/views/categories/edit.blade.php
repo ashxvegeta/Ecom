@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<form action="{{ route('categories.update', $category->id) }}" method="POST">
+<form action="{{ route('categories.update', $category->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
     <label for="name">Name:</label>
