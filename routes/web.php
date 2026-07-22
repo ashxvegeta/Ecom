@@ -5,13 +5,12 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\ProductController as FrontendProductController;
 use Illuminate\Support\Facades\Route;
-
+// index page show k lia
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-Route::get('/products-list', function () {
-    return view('frontend.products.index');
-});
+// product listing k lia
+Route::get('/products-list', [FrontendProductController::class, 'index']);
 
 Route::get('/products/{id}', function ($id) {
     return view('frontend.products.show');

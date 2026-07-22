@@ -45,9 +45,9 @@
             <div class="col-md-3 mb-4">
                 <div class="card border-0 shadow-sm h-100" style="border-radius: 20px; overflow: hidden;">
                     <div style="background: #f5f5f7; padding: 20px; text-align: center;">
-                        @if($featured_product->productImages->isNotEmpty())
-    <img src="{{ asset('storage/' . $featured_product->productImages->first()->image_path) }}"  style="height:150px;width:150px;">
-@endif
+                    @if($featured_product->productImages->isNotEmpty())
+                        <img src="{{ asset('storage/' . $featured_product->productImages->first()->image_path) }}"  style="height:150px;width:150px;">
+                    @endif
                     </div>
                     <div class="card-body p-4">
                         <p style="color: #86868b; font-size: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">{{$featured_product->brand->name}}</p>
@@ -63,7 +63,7 @@
 
         </div>
         <div class="text-center mt-4">
-            <a href="/products" class="btn btn-dark btn-lg" style="border-radius: 25px; padding: 12px 45px;">
+            <a href="/products-list" class="btn btn-dark btn-lg" style="border-radius: 25px; padding: 12px 45px;">
                 View All Products
             </a>
         </div>

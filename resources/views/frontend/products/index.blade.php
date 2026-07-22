@@ -108,47 +108,32 @@
 
                 {{-- Products Grid --}}
                 <div class="row">
-                    @for($i = 1; $i <= 9; $i++)
+                    @foreach($products as $product)
                     <div class="col-md-4 mb-4">
                         <div class="card border-0 shadow-sm h-100" style="border-radius: 16px; overflow: hidden; cursor: pointer;">
                             <div style="background: #f5f5f7; padding: 20px; text-align: center;">
-                                <img src="https://via.placeholder.com/200x150/f5f5f7/1d1d1f?text=Product"
-                                     class="img-fluid" style="border-radius: 8px;">
+                                @if($product->productImages->isNotEmpty())
+                                <img src="{{ asset('storage/' . $product->productImages->first()->image_path) }}"  style="height:150px;width:150px;">
+                                @endif
                             </div>
                             <div class="card-body p-3">
-                                <p style="color: #86868b; font-size: 11px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">Apple</p>
-                                <h6 class="font-weight-bold" style="color: #1d1d1f; font-size: 15px;">iPhone 16 Pro</h6>
-                                <p class="font-weight-bold mt-1" style="color: #1d1d1f; font-size: 16px;">₹1,29,999</p>
+                                <p style="color: #86868b; font-size: 11px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">
+                                    {{$product->brand->name}}
+                                </p>
+                                <h6 class="font-weight-bold" style="color: #1d1d1f; font-size: 16px;">{{$product->name}}</h6>
+                                <p class="font-weight-bold mt-2" style="color: #1d1d1f; font-size: 18px;">{{ formatPrice($product->productItems->first()->price) }}</p>
                                 <button class="btn btn-dark btn-block btn-sm" style="border-radius: 20px; font-size: 13px;">
                                     Add to Cart
                                 </button>
                             </div>
                         </div>
                     </div>
-                    @endfor
+                    @endforeach
                 </div>
 
                 {{-- Pagination --}}
                 <div class="d-flex justify-content-center mt-4">
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" style="border-radius: 8px; margin: 0 3px;">Previous</a>
-                            </li>
-                            <li class="page-item active">
-                                <a class="page-link" href="#" style="border-radius: 8px; margin: 0 3px; background: #1d1d1f; border-color: #1d1d1f;">1</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" style="border-radius: 8px; margin: 0 3px;">2</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" style="border-radius: 8px; margin: 0 3px;">3</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" style="border-radius: 8px; margin: 0 3px;">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
+                    {{ $products->links('vendor.pagination.bootstrap-4') }}
                 </div>
 
             </div>
