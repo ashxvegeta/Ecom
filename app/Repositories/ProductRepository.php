@@ -64,7 +64,7 @@ class ProductRepository  implements  ProductRepositoryInterface{
         $brandIds =  $filters['brand_id'] ?? [];
         $sort  =  $filters['sort'] ?? '';
 
-        $query = Product::with(['brand', 'productItems', 'productImages'])->where('status', 1);
+        $query = Product::with(['brand', 'productItems', 'productImages'])->active();
 
         if ($search != '') {
             $query->where('name', 'like', '%' . $search . '%');
