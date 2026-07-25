@@ -30,11 +30,16 @@
             </ul>
 
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#" style="color: #f5f5f7;">
-                        <i class="bi bi-search"></i>
-                    </a>
-                </li>
+                <form method="GET" action="/products-list" class="mr-3">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Search products..." value="{{ request('search') }}" style="border-radius: 20px 0 0 20px; background: #2d2d2f; border: none; color: white; font-size: 13px; width: 220px;height: 32px;margin-top: 2px;">
+            <div class="input-group-append">
+                <button class="btn btn-light btn-sm" type="submit" style="border-radius: 0 20px 20px 0;">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </div>
+    </form>x
                 <li class="nav-item">
                     <a class="nav-link" href="#" style="color: #f5f5f7;">
                         <i class="bi bi-bag"></i>
@@ -48,6 +53,9 @@
                 </li>
             </ul>
 
+            
+
         </div>
     </div>
 </nav>
+

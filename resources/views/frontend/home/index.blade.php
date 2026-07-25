@@ -52,7 +52,7 @@
                     <div class="card-body p-4">
                         <p style="color: #86868b; font-size: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">{{$featured_product->brand->name}}</p>
                         <h6 class="font-weight-bold" style="color: #1d1d1f; font-size: 16px;">{{$featured_product->name}}</h6>
-                        <p class="font-weight-bold mt-2" style="color: #1d1d1f; font-size: 18px;">{{ formatPrice($featured_product->productItems->first()->price) }}</p>
+                        <p class="font-weight-bold mt-2" style="color: #1d1d1f; font-size: 18px;">{{ optional($featured_product->productItems->first())->price?formatPrice($featured_product->productItems->first()->price):'price not available' }}</p>
                         <button class="btn btn-dark btn-block mt-2" style="border-radius: 25px; font-size: 14px;">
                             Add to Cart
                         </button>

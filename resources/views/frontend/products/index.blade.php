@@ -13,6 +13,7 @@
 </section>
 
 {{-- Products Section --}}
+<form method="GET" action="/products-list" id="filterForm">
 <section style="padding: 40px 0; background: #ffffff;">
     <div class="container">
         <div class="row">
@@ -23,67 +24,38 @@
                 {{-- Categories Filter --}}
                 <div class="p-4 bg-white shadow-sm mb-4" style="border-radius: 16px;">
                     <h6 class="font-weight-bold mb-3" style="color: #1d1d1f;">Categories</h6>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="cat1">
-                        <label class="form-check-label" for="cat1" style="color: #86868b; font-size: 14px;">
-                            📱 Mobiles
-                        </label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="cat2">
-                        <label class="form-check-label" for="cat2" style="color: #86868b; font-size: 14px;">
-                            💻 Laptops
-                        </label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="cat3">
-                        <label class="form-check-label" for="cat3" style="color: #86868b; font-size: 14px;">
-                            🖥️ Monitors
-                        </label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="cat4">
-                        <label class="form-check-label" for="cat4" style="color: #86868b; font-size: 14px;">
-                            ⌨️ Keyboards
-                        </label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="cat5">
-                        <label class="form-check-label" for="cat5" style="color: #86868b; font-size: 14px;">
-                            🎧 Accessories
-                        </label>
-                    </div>
+                        @foreach($categories as $category)
+                        <div class="form-check mb-2">
+                            <input class="form-check-input filter-checkbox" 
+                                type="checkbox" 
+                                name="category_id[]" 
+                                value="{{ $category->id }}"
+                                {{ in_array($category->id, request('category_id', [])) ? 'checked' : '' }}>
+                            <label class="form-check-label" style="color: #86868b; font-size: 14px;">
+                                {{ $category->name }}
+                            </label>
+                        </div>
+                        @endforeach
                 </div>
 
                 {{-- Brands Filter --}}
                 <div class="p-4 bg-white shadow-sm mb-4" style="border-radius: 16px;">
-                    <h6 class="font-weight-bold mb-3" style="color: #1d1d1f;">Brands</h6>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="brand1">
-                        <label class="form-check-label" for="brand1" style="color: #86868b; font-size: 14px;">Apple</label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="brand2">
-                        <label class="form-check-label" for="brand2" style="color: #86868b; font-size: 14px;">Samsung</label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="brand3">
-                        <label class="form-check-label" for="brand3" style="color: #86868b; font-size: 14px;">Dell</label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="brand4">
-                        <label class="form-check-label" for="brand4" style="color: #86868b; font-size: 14px;">HP</label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="brand5">
-                        <label class="form-check-label" for="brand5" style="color: #86868b; font-size: 14px;">Logitech</label>
-                    </div>
+                                <h6 class="font-weight-bold mb-3" style="color: #1d1d1f;">Brands</h6>
+                            @foreach($brands as $brand)
+                <div class="form-check mb-2">
+                    <input class="form-check-input filter-checkbox"  type="checkbox" name="brand_id[]" value="{{ $brand->id }}"
+                        {{ in_array($brand->id, request('brand_id', [])) ? 'checked' : '' }}>
+                    <label class="form-check-label" style="color: #86868b; font-size: 14px;">
+                        {{ $brand->name }}
+                    </label>
+                </div>
+                @endforeach
                 </div>
 
                 {{-- Price Filter --}}
                 <div class="p-4 bg-white shadow-sm" style="border-radius: 16px;">
                     <h6 class="font-weight-bold mb-3" style="color: #1d1d1f;">Price Range</h6>
-                    <input type="range" class="form-control-range" min="0" max="200000" value="100000">
+                    <input type="range" class="form-control-range" min="0" max="200000" value="{{ request('max_price', 200000) }}" name="max_price"  onchange="document.getElementById('filterForm').submit()">
                     <div class="d-flex justify-content-between mt-2">
                         <span style="color: #86868b; font-size: 13px;">₹0</span>
                         <span style="color: #86868b; font-size: 13px;">₹2,00,000</span>
@@ -98,12 +70,12 @@
                 {{-- Sort Bar --}}
                 <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white shadow-sm" style="border-radius: 12px;">
                     <p class="mb-0" style="color: #86868b; font-size: 14px;">Showing <strong>24</strong> products</p>
-                    <select class="form-control" style="width: auto; font-size: 14px; border-radius: 8px;">
-                        <option>Sort by: Featured</option>
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
-                        <option>Newest First</option>
-                    </select>
+                <select class="form-control" name="sort"  style="width: auto; font-size: 14px; border-radius: 8px;" onchange="document.getElementById('filterForm').submit()">
+                        <!-- <option  value= "">Sort by: Featured</option> -->
+                        <option value="price_asc" {{ request('sort')=='price_asc' ? 'selected': ''}}>Price: Low to High</option>
+                        <option value="price_desc" {{ request('sort')=='price_desc' ? 'selected': ''}}>Price: High to Low</option>
+                        <option value ="newest">Newest First</option>
+                </select>
                 </div>
 
                 {{-- Products Grid --}}
@@ -121,7 +93,7 @@
                                     {{$product->brand->name}}
                                 </p>
                                 <h6 class="font-weight-bold" style="color: #1d1d1f; font-size: 16px;">{{$product->name}}</h6>
-                                <p class="font-weight-bold mt-2" style="color: #1d1d1f; font-size: 18px;">{{ formatPrice($product->productItems->first()->price) }}</p>
+                                <p class="font-weight-bold mt-2" style="color: #1d1d1f; font-size: 18px;">{{ optional($product->productItems->first())->price ?? 'N/A' }}</p>
                                 <button class="btn btn-dark btn-block btn-sm" style="border-radius: 20px; font-size: 13px;">
                                     Add to Cart
                                 </button>
@@ -140,5 +112,14 @@
         </div>
     </div>
 </section>
+</form>
+
+<script>
+    document.querySelectorAll('.filter-checkbox').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            document.getElementById('filterForm').submit();
+        });
+    });
+</script>
 
 @endsection

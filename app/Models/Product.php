@@ -25,7 +25,7 @@ class Product extends Model
     // A Product can belong to many Categories
     public function categories()
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Category::class,'category_products');
     }
 
     // A Product can have many Product Images
