@@ -8,11 +8,12 @@ use App\Models\Product;
 use  App\Models\Category;
 use  App\Models\Brand;
 use  App\Models\ProductItem;
+use  App\Http\Requests\ProductFilterRequest;
 
 class ProductController extends Controller
 {
     //
-    public function index(Request $request){
+    public function index(ProductFilterRequest $request){
    
         $search      = $request->input('search');
         $categoryIds = $request->input('category_id', []);
