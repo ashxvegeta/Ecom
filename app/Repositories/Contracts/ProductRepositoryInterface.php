@@ -2,6 +2,7 @@
 namespace App\Repositories\Contracts;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;  
 
 
 //step1 first we will create an interface that defines the methods that our repository will implement.
@@ -13,4 +14,5 @@ interface ProductRepositoryInterface
     public function createProduct(array $data): Product;
     public function updateProduct(Product $product, array $data): Product;
     public function deleteProduct(Product $product): void;
+    public function getFilteredProducts(array $filters):LengthAwarePaginator;
 }

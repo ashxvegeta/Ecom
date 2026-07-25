@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //step 3: In the AppServiceProvider, we will bind the ProductRepositoryInterface to the ProductRepository implementation. This will allow us to use dependency injection to inject the repository into our controllers and services.
+        // bind the  ProductRepositoryInterface for 
          $this->app->bind(
             ProductRepositoryInterface::class,
             ProductRepository::class

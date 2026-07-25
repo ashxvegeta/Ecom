@@ -1,9 +1,11 @@
 <?php
 namespace App\Repositories;
 use App\Models\Product;
+use App\Models\ProductItem;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;  
 
 
 // step 2: Now we will create a concrete implementation of the ProductRepositoryInterface. This class will contain the actual logic for interacting with the Product model and performing CRUD operations.
@@ -51,6 +53,51 @@ class ProductRepository  implements  ProductRepositoryInterface{
     public function deleteProduct(Product $product): void
     {
             $product->delete();
+    }
+
+    public function getFilteredProducts(array $filters):LengthAwarePaginator{
+
+
+        $search =  $filters['search'] ?? '';
+        $maxprice =  $filters['max_price'] ?? '';
+        $categoryIds = $filters['category_id'] ?? [];
+        $brandIds =  $filters['brand_id'] ?? [];
+        $sort  =  $filters['sort'] ?? '';
+
+        $query = Product::with(['brand', 'productItems', 'productImages'])->where('status', 1);
+
+        if ($search != '') {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        if ($maxprice != '') {
+            $query->whereHas('productItems',function($q) use ($maxprice){
+               $q->where('price', '<=',$maxprice);
+            });
+        }
+
+        if (!empty($categoryIds)) {
+            $query->whereHas('categories', function($q) use ($categoryIds) {
+                $q->whereIn('categories.id', $categoryIds);
+            });
+        }
+
+        if (!empty($brandIds)) {
+            $query->whereIn('brand_id', $brandIds);
+        }
+
+        if($sort!=''){
+            if($sort == 'price_asc'){
+               $query->orderBy(ProductItem::select('price')->whereColumn('product_id','products.id')->orderBy('price', 'asc')->limit(1),'asc');
+            }elseif($sort == 'price_desc'){
+                  $query->orderBy(ProductItem::select('price')->whereColumn('product_id','products.id')->orderBy('price', 'desc')->limit(1),'desc');
+            }else{
+                $query->latest();
+            }
+        }
+
+        return  $query->paginate(5);
+
     }
   
 
