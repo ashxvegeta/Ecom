@@ -15,4 +15,10 @@ interface ProductRepositoryInterface
     public function updateProduct(Product $product, array $data): Product;
     public function deleteProduct(Product $product): void;
     public function getFilteredProducts(array $filters):LengthAwarePaginator;
+    public function getProductBySlug(string $slug): ?Product;
+    public function getRelatedProducts(Product $product): ?Collection;
+
+    
+
+    
 }

@@ -7,14 +7,18 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\ProductController as FrontendProductController;
 use Illuminate\Support\Facades\Route;
+
+
+// Admin Routes
+
+
 // index page show k lia
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // product listing k lia
 Route::get('/products-list', [FrontendProductController::class, 'index']);
 
-Route::get('/products/{id}', function ($id) {
-    return view('frontend.products.show');
-});
+
+Route::get('/products/{slug}', [FrontendProductController::class, 'show']);
 
 Route::get('/cart', function () {
     return view('frontend.cart.index');
@@ -41,9 +45,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Admin Routes
-Route::resource('products', ProductController::class);
-Route::resource('brands', BrandController::class);
-Route::resource('categories', CategoryController::class);
+Route::prefix('admin')->group(function() {
+    Route::resource('products', ProductController::class);
+    Route::resource('brands', BrandController::class);
+    Route::resource('categories', CategoryController::class);
+});
 
 require __DIR__.'/auth.php';

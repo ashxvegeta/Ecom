@@ -11,7 +11,7 @@
             <ol class="breadcrumb mb-0" style="background: transparent; padding: 0; font-size: 13px;">
                 <li class="breadcrumb-item"><a href="/" style="color: #86868b; text-decoration: none;">Home</a></li>
                 <li class="breadcrumb-item"><a href="/products" style="color: #86868b; text-decoration: none;">Products</a></li>
-                <li class="breadcrumb-item active" style="color: #1d1d1f;">iPhone 16 Pro</li>
+                <li class="breadcrumb-item active" style="color: #1d1d1f;">{{ $product->name }}</li>
             </ol>
         </nav>
     </div>
@@ -31,11 +31,11 @@
                 </div>
                 {{-- Thumbnail Images --}}
                 <div class="d-flex gap-2 justify-content-center">
-                    @for($i = 1; $i <= 3; $i++)
-                    <div class="p-2" style="background: #f5f5f7; border-radius: 10px; cursor: pointer; border: 2px solid {{ $i == 1 ? '#1d1d1f' : 'transparent' }}; width: 80px; text-align: center;">
-                        <img src="https://via.placeholder.com/60x50/f5f5f7/1d1d1f?text=img" class="img-fluid">
+                    @foreach($product->productImages as  $image)
+                    <div class="p-2" style="background: #f5f5f7; border-radius: 10px; cursor: pointer; border: 2px solid {{ $loop->first  ? '#1d1d1f' : 'transparent' }}; width: 80px; text-align: center;">
+                        <img src="{{ asset('storage/' . $image->image_path) }}" class="img-fluid">
                     </div>
-                    @endfor
+                    @endforeach
                 </div>
             </div>
 
@@ -43,25 +43,25 @@
             <div class="col-md-6">
 
                 {{-- Brand --}}
-                <p style="color: #86868b; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">Apple</p>
+                <p style="color: #86868b; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">{{ $product->brand->name }}</p>
 
                 {{-- Name --}}
-                <h1 style="color: #1d1d1f; font-size: 36px; font-weight: 700; letter-spacing: -1px;">iPhone 16 Pro</h1>
+                <h1 style="color: #1d1d1f; font-size: 36px; font-weight: 700; letter-spacing: -1px;">{{ $product->name }}</h1>
 
                 {{-- Price --}}
                 <div class="my-4">
-                    <span style="font-size: 32px; font-weight: 700; color: #1d1d1f;">₹1,29,999</span>
+                    <span style="font-size: 32px; font-weight: 700; color: #1d1d1f;">{{formatPrice($product->productItems->first()->price)}}</span>
                 </div>
 
                 {{-- Stock --}}
                 <div class="mb-4">
                     <span class="badge badge-success" style="font-size: 13px; padding: 6px 12px; border-radius: 20px;">
-                        ✓ In Stock
+                        {{$product->productItems->first()->stock > 0 ? '✓ In Stock':'Out of Stock'}}   
                     </span>
                 </div>
 
                 {{-- SKU --}}
-                <p style="color: #86868b; font-size: 13px;">SKU: IPH-16-PRO-BLK</p>
+                <p style="color: #86868b; font-size: 13px;">{{ $product->productItems->first()->sku }}</p>
 
                 <hr style="border-color: #e5e5e5;">
 
@@ -109,9 +109,7 @@
                 <div class="p-5" style="background: #f5f5f7; border-radius: 20px;">
                     <h4 class="font-weight-bold mb-4" style="color: #1d1d1f;">Product Description</h4>
                     <p style="color: #86868b; font-size: 15px; line-height: 1.8;">
-                        The iPhone 16 Pro features a stunning 6.3-inch Super Retina XDR display with ProMotion technology.
-                        Powered by the A18 Pro chip, it delivers exceptional performance for all your tasks.
-                        With the advanced camera system, capture stunning photos and videos in any condition.
+                        {{ $product->description }}
                     </p>
                 </div>
             </div>
@@ -126,7 +124,7 @@
                         <tbody>
                             <tr>
                                 <td style="color: #86868b; width: 30%;">Brand</td>
-                                <td style="color: #1d1d1f; font-weight: 500;">Apple</td>
+                                <td style="color: #1d1d1f; font-weight: 500;">{{ $product->brand->name }}</td>
                             </tr>
                             <tr>
                                 <td style="color: #86868b;">Display</td>
@@ -167,24 +165,27 @@
             <div class="col-12">
                 <h4 class="font-weight-bold mb-4" style="color: #1d1d1f;">Related Products</h4>
                 <div class="row">
-                    @for($i = 1; $i <= 4; $i++)
-                    <div class="col-md-3 mb-4">
-                        <div class="card border-0 shadow-sm h-100" style="border-radius: 16px; overflow: hidden; cursor: pointer;">
-                            <div style="background: #f5f5f7; padding: 20px; text-align: center;">
-                                <img src="https://via.placeholder.com/200x150/f5f5f7/1d1d1f?text=Product"
-                                    class="img-fluid" style="border-radius: 8px;">
-                            </div>
-                            <div class="card-body p-3">
-                                <p style="color: #86868b; font-size: 11px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">Apple</p>
-                                <h6 class="font-weight-bold" style="color: #1d1d1f; font-size: 15px;">iPhone 15 Pro</h6>
-                                <p class="font-weight-bold mt-1" style="color: #1d1d1f; font-size: 16px;">₹99,999</p>
-                                <button class="btn btn-dark btn-block btn-sm" style="border-radius: 20px; font-size: 13px;">
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
+                    @foreach($related_products as $products)
+                     <div class="col-md-3 mb-4">
+                <a href="/products/{{$products->slug}}" style="text-decoration:none;">
+                <div class="card border-0 shadow-sm h-100" style="border-radius: 20px; overflow: hidden;">
+                    <div style="background: #f5f5f7; padding: 20px; text-align: center;">
+                    @if($products->productImages->isNotEmpty())
+                        <img src="{{ asset('storage/' . $products->productImages->first()->image_path) }}"  style="height:150px;width:150px;">
+                    @endif
                     </div>
-                    @endfor
+                    <div class="card-body p-4">
+                        <p style="color: #86868b; font-size: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">{{$products->brand->name}}</p>
+                        <h6 class="font-weight-bold" style="color: #1d1d1f; font-size: 16px;">{{$products->name}}</h6>
+                        <p class="font-weight-bold mt-2" style="color: #1d1d1f; font-size: 18px;">{{ optional($products->productItems->first())->price?formatPrice($products->productItems->first()->price):'price not available' }}</p>
+                        <button class="btn btn-dark btn-block mt-2" style="border-radius: 25px; font-size: 14px;">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+                </a>
+            </div>
+                    @endforeach
                 </div>
             </div>
         </div>

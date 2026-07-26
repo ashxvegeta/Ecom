@@ -43,6 +43,7 @@
 
             @foreach($featured_products as $featured_product)
             <div class="col-md-3 mb-4">
+                <a href="products/{{$featured_product->slug}}" style="text-decoration:none;">
                 <div class="card border-0 shadow-sm h-100" style="border-radius: 20px; overflow: hidden;">
                     <div style="background: #f5f5f7; padding: 20px; text-align: center;">
                     @if($featured_product->productImages->isNotEmpty())
@@ -58,6 +59,7 @@
                         </button>
                     </div>
                 </div>
+                </a>
             </div>
             @endforeach
 

@@ -21,7 +21,6 @@ class ProductController extends Controller
     ) {}
 
     public function index(ProductFilterRequest $request){
-
         $filters = $request->only(['search', 'category_id', 'brand_id', 'max_price', 'sort']);
         $products = $this->repository->getFilteredProducts($filters);
         $categories = Cache::remember('categories.active',3600,function(){
@@ -31,6 +30,13 @@ class ProductController extends Controller
            return Brand::where('status', 1)->get();
         });
         return view('frontend.products.index', compact('products','categories','brands'));
+    }
+    
+
+    public function show(string $slug){
+        $product = $this->repository->getProductBySlug($slug);
+        $related_products = $this->repository->getRelatedProducts($product);
+        return view('frontend.products.show',compact('product','related_products'));
     }
 
 }

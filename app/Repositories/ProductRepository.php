@@ -99,6 +99,29 @@ class ProductRepository  implements  ProductRepositoryInterface{
         return  $query->paginate(5);
 
     }
+
+    public function getProductBySlug(string $slug):?Product{
+        $query = Product::with(['brand', 'productItems', 'productImages','categories'])->active()->where('slug',$slug)->first();
+         return $query;
+
+
+    }
+
+    public function getRelatedProducts(Product $product):Collection{
+       $categoryId =  $product->categories->first()?->id;
+       if(!$categoryId ){
+         return new Collection();
+       }
+
+       return  Product::with(['brand', 'productItems', 'productImages'])
+       ->active()
+       ->whereHas('categories',function($q) use ($categoryId){
+                 $q->where('categories.id',$categoryId);
+       })->where('id','!=',$product->id)
+       ->take(4)
+       ->get();
+
+    }
   
 
 }
