@@ -68,21 +68,35 @@
                 {{-- Quantity --}}
                 <div class="mb-4">
                     <label style="color: #1d1d1f; font-weight: 600; font-size: 14px;">Quantity</label>
-                    <div class="d-flex align-items-center mt-2">
-                        <button class="btn btn-outline-dark" style="border-radius: 50%; width: 36px; height: 36px; padding: 0;">−</button>
-                        <span class="mx-3 font-weight-bold" style="font-size: 18px;">1</span>
-                        <button class="btn btn-outline-dark" style="border-radius: 50%; width: 36px; height: 36px; padding: 0;">+</button>
-                    </div>
+                   <div class="d-flex align-items-center mt-2">
+    <button class="btn btn-outline-dark btn-sm qty-minus" 
+            style="border-radius: 50%; width: 36px; height: 36px; padding: 0;">−</button>
+    
+    <input type="number"  readonly
+           class="qty-input mx-2" 
+           value="1" 
+           min="1"
+           style="width: 50px; text-align: center; border: 1px solid #e5e5e5; border-radius: 8px; padding: 4px;">
+    
+    <button class="btn btn-outline-dark btn-sm qty-plus"
+            style="border-radius: 50%; width: 36px; height: 36px; padding: 0;">+</button>
+</div>
                 </div>
 
                 {{-- Buttons --}}
                 <div class="mb-4">
-                    <button class="btn btn-dark btn-lg btn-block mb-3" style="border-radius: 25px; font-size: 16px; padding: 14px;">
+                    <form method="POST" action="{{ route('cart.add') }}">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                     <input type="hidden" name="quantity" value="1" class="qty-hidden">
+                    <button type="submit"  class="btn btn-dark btn-lg btn-block mb-3" style="border-radius: 25px; font-size: 16px; padding: 14px;">
                         <i class="bi bi-bag"></i> Add to Cart
                     </button>
+                  
                     <button class="btn btn-outline-dark btn-lg btn-block" style="border-radius: 25px; font-size: 16px; padding: 14px;">
                         ⚡ Buy Now
                     </button>
+                      </form>
                 </div>
 
                 <hr style="border-color: #e5e5e5;">
@@ -191,4 +205,28 @@
         </div>
     </div>
 </section>
+
+@section('scripts')
+<script>
+  document.querySelectorAll('.qty-minus').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        let input = this.parentElement.querySelector('.qty-input');
+        let hidden = document.querySelector('.qty-hidden'); // ← directly dhundho
+        if(parseInt(input.value) > 1) {
+            input.value = parseInt(input.value) - 1;
+            hidden.value = input.value;
+        }
+    });
+});
+
+document.querySelectorAll('.qty-plus').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        let input = this.parentElement.querySelector('.qty-input');
+        let hidden = document.querySelector('.qty-hidden'); // ← directly dhundho
+        input.value = parseInt(input.value) + 1;
+        hidden.value = input.value;
+    });
+});
+</script>
+@endsection 
 @endsection
