@@ -17,18 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // product listing k lia
 Route::get('/products-list', [FrontendProductController::class, 'index']);
-
-
 Route::get('/products/{slug}', [FrontendProductController::class, 'show']);
-
-Route::get('/cart', function () {
-    return view('frontend.cart.index');
-});
-
 Route::get('/checkout', function () {
     return view('frontend.checkout.index');
 });
-
 Route::get('/orders/{id}', function ($id) {
     return view('frontend.orders.show');
 });
@@ -36,20 +28,21 @@ Route::get('/orders', function () {
     return view('frontend.orders.index');
 });
 
-
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+Route::post('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+Route::get('/cart', [CartController::class, 'index']);
+Route::post('/cart/update', [CartController::class, 'updateQuantity'])->name('cart.update');
+
 
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
 Route::prefix('admin')->group(function() {
     Route::resource('products', ProductController::class);
     Route::resource('brands', BrandController::class);

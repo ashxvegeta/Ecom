@@ -41,9 +41,13 @@
         </div>
     </form>x
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="color: #f5f5f7;">
+                    <a class="nav-link" href="/cart" style="color: #f5f5f7;">
                         <i class="bi bi-bag"></i>
-                        <span class="badge badge-light" style="font-size: 10px;">0</span>
+                        @php
+                        $cartItems = session()->get('cart', []);
+                        $cartcount = collect($cartItems)->sum('quantity');
+                        @endphp
+                        <span class="badge badge-light" style="font-size: 10px;">{{$cartcount}}</span>
                     </a>
                 </li>
                 <li class="nav-item">
