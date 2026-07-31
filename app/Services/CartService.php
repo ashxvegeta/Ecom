@@ -44,4 +44,8 @@ class CartService{
         return true;
     }
 
+    public function getCheckoutData(){
+       return session()->get('cart',[]);
+    }
+
 }

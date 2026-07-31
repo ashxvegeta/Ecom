@@ -109,24 +109,30 @@
                     <h5 class="font-weight-bold mb-4" style="color: #1d1d1f;">Order Summary</h5>
 
                     {{-- Items --}}
-                    @for($i = 1; $i <= 3; $i++)
+                    @php
+                    $totalprice = 0;
+                    @endphp
+                    @foreach($checkoutdata as $checkout)
                     <div class="d-flex align-items-center mb-3">
                         <div style="background: #ffffff; border-radius: 8px; padding: 8px; min-width: 60px; text-align: center;">
-                            <img src="https://via.placeholder.com/45x40/f5f5f7/1d1d1f?text=P" class="img-fluid">
+                               <img src="{{ asset('storage/' . $checkout['image']) }}" class="img-fluid" style="height:55px;min-width:60px;">
                         </div>
                         <div class="ml-3 flex-grow-1">
-                            <p class="mb-0 font-weight-bold" style="color: #1d1d1f; font-size: 13px;">iPhone 16 Pro</p>
-                            <p class="mb-0" style="color: #86868b; font-size: 12px;">Qty: 1</p>
+                            <p class="mb-0 font-weight-bold" style="color: #1d1d1f; font-size: 13px;">{{$checkout['brand']}}</p>
+                            <p class="mb-0" style="color: #86868b; font-size: 12px;">{{$checkout['quantity']}}</p>
                         </div>
-                        <span style="color: #1d1d1f; font-weight: 600; font-size: 14px;">₹1,29,999</span>
+                        <span style="color: #1d1d1f; font-weight: 600; font-size: 14px;">{{ formatPrice($checkout['price']*$checkout['quantity'])}}</span>
                     </div>
-                    @endfor
+                    @php
+                    $totalprice +=  $checkout['price']*$checkout['quantity'];
+                    @endphp
+                    @endforeach
 
                     <hr style="border-color: #e5e5e5;">
 
                     <div class="d-flex justify-content-between mb-2">
                         <span style="color: #86868b; font-size: 14px;">Subtotal</span>
-                        <span style="color: #1d1d1f; font-weight: 500;">₹3,89,997</span>
+                        <span style="color: #1d1d1f; font-weight: 500;">{{ formatPrice($totalprice)}}</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-3">
@@ -138,7 +144,7 @@
 
                     <div class="d-flex justify-content-between mb-4">
                         <span style="color: #1d1d1f; font-weight: 700; font-size: 16px;">Total</span>
-                        <span style="color: #1d1d1f; font-weight: 700; font-size: 20px;">₹3,89,997</span>
+                        <span style="color: #1d1d1f; font-weight: 700; font-size: 20px;">{{ formatPrice($totalprice)}}</span>
                     </div>
 
                     <button class="btn btn-dark btn-block btn-lg" style="border-radius: 25px; font-size: 15px; padding: 14px;">
