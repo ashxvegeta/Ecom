@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 use App\Models\Product;
+use Illuminate\Support\Collection;
 
 class CartService{
 
@@ -46,6 +47,25 @@ class CartService{
 
     public function getCheckoutData(){
        return session()->get('cart',[]);
+    }
+
+    public function getCart(){
+       return collect(session()->get('cart', []));
+    }
+
+        public function subtotal(): float
+    {
+        $cart = $this->getCheckoutData();
+
+
+        return collect($cart)->sum(function ($item) {
+            return $item['price'] * $item['quantity'];
+        });
+    }
+
+        public function clearCart()
+    {
+        session()->forget('cart');
     }
 
 }
