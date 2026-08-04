@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
+use App\Enums\PaymentMethod;
 
 class Order extends Model
 {
@@ -48,6 +49,7 @@ class Order extends Model
     protected $casts = [
         'order_status'   => OrderStatus::class,
         'payment_status' => PaymentStatus::class,
+        'payment_method' => PaymentMethod::class,
     ];
 
 }

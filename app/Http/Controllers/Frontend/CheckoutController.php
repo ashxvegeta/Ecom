@@ -34,9 +34,5 @@ class CheckoutController extends Controller
         return redirect()->route('order.success', $order->id);
     }
 
-    public function orderSuccess($id)
-    {
-     $order = auth()->user()->orders()->with('items')->findOrFail($id);
-     return view('frontend.orders.success', compact('order'));
-    }
+   
 }

@@ -54,7 +54,7 @@
 
                 {{-- Buttons --}}
                 <div class="d-flex justify-content-center gap-3">
-                    <a href="" class="btn btn-dark" style="border-radius: 25px; padding: 10px 30px;">
+                    <a href="{{ route('orders.index') }}" class="btn btn-dark" style="border-radius: 25px; padding: 10px 30px;">
                         View My Orders
                     </a>
                     <a href="/" class="btn btn-outline-dark" style="border-radius: 25px; padding: 10px 30px;">

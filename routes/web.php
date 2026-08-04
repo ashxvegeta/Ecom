@@ -8,6 +8,7 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\ProductController as FrontendProductController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
+use App\Http\Controllers\Frontend\OrderController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -43,13 +44,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
-    Route::get('/order/success/{id}', [CheckoutController::class, 'orderSuccess'])->name('order.success');
+    Route::get('/order/success/{id}', [OrderController::class, 'orderSuccess'])->name('order.success');
+    Route::get('/orders', [OrderController::class, 'orderIndex'])->name('orders.index');
    
 });
-
-
-
-
 Route::prefix('admin')->group(function() {
     Route::resource('products', ProductController::class);
     Route::resource('brands', BrandController::class);
