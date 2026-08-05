@@ -83,7 +83,7 @@
                             <h6 class="font-weight-bold mb-1" style="color: #1d1d1f;">{{ $item->product_name }}</h6>
                             <p class="mb-0" style="color: #86868b; font-size: 13px;">Qty: {{ $item->quantity }}</p>
                         </div>
-                        <span class="font-weight-bold" style="color: #1d1d1f; font-size: 16px;">₹{{ number_format($item->total, 2) }}</span>
+                        <span class="font-weight-bold" style="color: #1d1d1f; font-size: 16px;">{{ number_format($item->total, 2) }}</span>
                     </div>
 
                 </div>
@@ -107,7 +107,7 @@
 
                     <div class="d-flex justify-content-between mb-2">
                         <span style="color: #86868b; font-size: 14px;">Subtotal</span>
-                        <span style="color: #1d1d1f; font-weight: 500;">₹{{ number_format($order->subtotal, 2) }}</span>
+                        <span style="color: #1d1d1f; font-weight: 500;">{{ formatPrice($order->subtotal, 2) }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-3">
                         <span style="color: #86868b; font-size: 14px;">Delivery</span>
@@ -118,7 +118,7 @@
 
                     <div class="d-flex justify-content-between mb-4">
                         <span style="color: #1d1d1f; font-weight: 700; font-size: 16px;">Total</span>
-                        <span style="color: #1d1d1f; font-weight: 700; font-size: 20px;">₹{{ number_format($order->grand_total, 2) }}</span>
+                        <span style="color: #1d1d1f; font-weight: 700; font-size: 20px;">{{ formatPrice($order->grand_total, 2) }}</span>
                     </div>
 
                     <div class="p-3 mb-3" style="background: #ffffff; border-radius: 12px;">
