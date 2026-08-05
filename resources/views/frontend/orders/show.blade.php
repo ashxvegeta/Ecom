@@ -9,10 +9,10 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
             <div>
-                <h2 class="font-weight-bold mb-1" style="color: #1d1d1f; font-size: 32px;">Order #TZ-001</h2>
-                <p class="mb-0" style="color: #86868b;">Placed on 15 July 2024</p>
+                <h2 class="font-weight-bold mb-1" style="color: #1d1d1f; font-size: 32px;">Order #TZ-{{ $order->id }}</h2>
+                <p class="mb-0" style="color: #86868b;">Placed on {{ $order->created_at->format('d M Y') }}</p>
             </div>
-            <span class="badge badge-warning" style="border-radius: 20px; padding: 8px 16px; font-size: 14px;">Pending</span>
+            <span class="badge badge-{{ $order->payment_status->color() }}" style="border-radius: 20px; padding: 8px 16px; font-size: 14px;">{{ $order->payment_status->label() }}</span>
         </div>
     </div>
 </section>
@@ -95,7 +95,7 @@
                     <p class="mb-1 font-weight-bold" style="color: #1d1d1f;">{{ $order->first_name }} {{ $order->last_name }}</p>
                     <p class="mb-1" style="color: #86868b; font-size: 14px;">{{ $order->address }}</p>
                     <p class="mb-1" style="color: #86868b; font-size: 14px;">{{ $order->city }}, {{ $order->state }} - {{ $order->pincode }}</p>
-                    <p class="mb-0" style="color: #86868b; font-size: 14px;">📞 91+{{ $order->phone }}</p>
+                    <p class="mb-0" style="color: #86868b; font-size: 14px;">📞91+{{ $order->phone }}</p>
                 </div>
 
             </div>
