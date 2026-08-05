@@ -68,30 +68,34 @@
                 </div>
 
                 {{-- Order Items --}}
+
+
+                @foreach($order->items as $item)
                 <div class="p-4 shadow-sm mb-4" style="border-radius: 16px; border: 1px solid #e5e5e5;">
                     <h5 class="font-weight-bold mb-4" style="color: #1d1d1f;">Order Items</h5>
 
                     <div class="d-flex align-items-center mb-3">
                         <div style="background: #f5f5f7; border-radius: 10px; padding: 12px; min-width: 80px; text-align: center;">
-                            <img src="https://via.placeholder.com/60x50/f5f5f7/1d1d1f?text=P" class="img-fluid">
+                            <img  src="{{ asset('storage/' . ($item->product->productImages->first()?->image_path ?? 'default-image.jpg')) }}" class="img-fluid" height="70" width="70" alt="{{ $item->product_name }}">
                         </div>
                         <div class="ml-3 flex-grow-1">
-                            <p style="color: #86868b; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Apple</p>
-                            <h6 class="font-weight-bold mb-1" style="color: #1d1d1f;">iPhone 16 Pro</h6>
-                            <p class="mb-0" style="color: #86868b; font-size: 13px;">SKU: IPH-16-PRO-BLK · Qty: 1</p>
+                            <p style="color: #86868b; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">{{ $item->product->brand->name ?? 'Unknown Brand' }}</p>
+                            <h6 class="font-weight-bold mb-1" style="color: #1d1d1f;">{{ $item->product_name }}</h6>
+                            <p class="mb-0" style="color: #86868b; font-size: 13px;">Qty: {{ $item->quantity }}</p>
                         </div>
-                        <span class="font-weight-bold" style="color: #1d1d1f; font-size: 16px;">₹1,29,999</span>
+                        <span class="font-weight-bold" style="color: #1d1d1f; font-size: 16px;">₹{{ number_format($item->total, 2) }}</span>
                     </div>
 
                 </div>
+                @endforeach
 
                 {{-- Shipping Address --}}
                 <div class="p-4 shadow-sm" style="border-radius: 16px; border: 1px solid #e5e5e5;">
                     <h5 class="font-weight-bold mb-3" style="color: #1d1d1f;">Shipping Address</h5>
-                    <p class="mb-1 font-weight-bold" style="color: #1d1d1f;">John Doe</p>
-                    <p class="mb-1" style="color: #86868b; font-size: 14px;">123, ABC Street, Andheri West</p>
-                    <p class="mb-1" style="color: #86868b; font-size: 14px;">Mumbai, Maharashtra - 400001</p>
-                    <p class="mb-0" style="color: #86868b; font-size: 14px;">📞 +91 98765 43210</p>
+                    <p class="mb-1 font-weight-bold" style="color: #1d1d1f;">{{ $order->first_name }} {{ $order->last_name }}</p>
+                    <p class="mb-1" style="color: #86868b; font-size: 14px;">{{ $order->address }}</p>
+                    <p class="mb-1" style="color: #86868b; font-size: 14px;">{{ $order->city }}, {{ $order->state }} - {{ $order->pincode }}</p>
+                    <p class="mb-0" style="color: #86868b; font-size: 14px;">📞 91+{{ $order->phone }}</p>
                 </div>
 
             </div>
@@ -103,7 +107,7 @@
 
                     <div class="d-flex justify-content-between mb-2">
                         <span style="color: #86868b; font-size: 14px;">Subtotal</span>
-                        <span style="color: #1d1d1f; font-weight: 500;">₹1,29,999</span>
+                        <span style="color: #1d1d1f; font-weight: 500;">₹{{ number_format($order->subtotal, 2) }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-3">
                         <span style="color: #86868b; font-size: 14px;">Delivery</span>
@@ -114,17 +118,17 @@
 
                     <div class="d-flex justify-content-between mb-4">
                         <span style="color: #1d1d1f; font-weight: 700; font-size: 16px;">Total</span>
-                        <span style="color: #1d1d1f; font-weight: 700; font-size: 20px;">₹1,29,999</span>
+                        <span style="color: #1d1d1f; font-weight: 700; font-size: 20px;">₹{{ number_format($order->grand_total, 2) }}</span>
                     </div>
 
                     <div class="p-3 mb-3" style="background: #ffffff; border-radius: 12px;">
                         <p class="mb-1" style="color: #86868b; font-size: 12px;">Payment Method</p>
-                        <p class="mb-0 font-weight-bold" style="color: #1d1d1f; font-size: 14px;">💵 Cash on Delivery</p>
+                        <p class="mb-0 font-weight-bold" style="color: #1d1d1f; font-size: 14px;">💵 {{ $order->payment_method->label() }}</p>
                     </div>
 
                     <div class="p-3" style="background: #ffffff; border-radius: 12px;">
                         <p class="mb-1" style="color: #86868b; font-size: 12px;">Payment Status</p>
-                        <span class="badge badge-warning" style="border-radius: 20px; padding: 5px 10px;">Pending</span>
+                        <span class="badge badge-{{ $order->payment_status->color() }}" style="border-radius: 20px; padding: 5px 10px;">{{ $order->payment_status->label() }}</span>
                     </div>
 
                 </div>

@@ -22,4 +22,13 @@ class OrderController extends Controller
         return view('frontend.orders.index', compact('orders'));
     }
 
+    public function orderShow($id)
+    {
+        $order = auth()->user()->orders()->with([
+            'items.product.productImages',
+            'items.product.brand',
+        ])->findOrFail($id);
+        return view('frontend.orders.show', compact('order'));
+    }
+
 }

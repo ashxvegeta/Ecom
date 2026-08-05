@@ -20,9 +20,7 @@ Route::get('/products/{slug}', [FrontendProductController::class, 'show']);
 Route::get('/checkout', function () {
     return view('frontend.checkout.index');
 });
-Route::get('/orders/{id}', function ($id) {
-    return view('frontend.orders.show');
-});
+
 Route::get('/orders', function () {
     return view('frontend.orders.index');
 });
@@ -46,7 +44,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
     Route::get('/order/success/{id}', [OrderController::class, 'orderSuccess'])->name('order.success');
     Route::get('/orders', [OrderController::class, 'orderIndex'])->name('orders.index');
-   
+    Route::get('/orders/{id}', [OrderController::class, 'orderShow'])->name('orders.show');
+
 });
 Route::prefix('admin')->group(function() {
     Route::resource('products', ProductController::class);
