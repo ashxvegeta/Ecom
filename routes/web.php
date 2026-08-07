@@ -10,6 +10,9 @@ use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\OrderController;
 use Illuminate\Support\Facades\Route;
+use App\Mail\OrderConfirmationMail;
+use App\Models\Order;
+use Illuminate\Support\Facades\Mail;
 
 
 
@@ -52,5 +55,16 @@ Route::prefix('admin')->group(function() {
     Route::resource('brands', BrandController::class);
     Route::resource('categories', CategoryController::class);
 });
+
+
+Route::get('/test-mail', function () {
+    $order = Order::latest()->first();
+
+    Mail::to('rashutosh758@gmail.com')
+        ->send(new OrderConfirmationMail($order));
+
+    return 'Mail Sent';
+});
+
 
 require __DIR__.'/auth.php';

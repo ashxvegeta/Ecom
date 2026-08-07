@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Order;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
+use App\Events\OrderPlaced;
 
 class PlaceOrderAction
 {
@@ -59,6 +60,7 @@ class PlaceOrderAction
             $this->cartService->clearCart();
 
             //fire  event
+            event(new OrderPlaced($order));
 
             return $order;
           
