@@ -8,6 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderConfirmationMail;
+use App\Notifications\OrderPlacedNotification;
 
 class SendOrderConfirmation implements ShouldQueue
 {
@@ -26,8 +27,10 @@ class SendOrderConfirmation implements ShouldQueue
      */
     public function handle(OrderPlaced $event): void
     {
-        //
-        Log::info('SendOrderConfirmation listener triggered for order: ' . $event->order->id);
+        
        Mail::to($event->order->email)->send(new OrderConfirmationMail($event->order));
+       if($event->order->user) {
+            $event->order->user->notify(new OrderPlacedNotification($event->order));
+        }
     }
 }
