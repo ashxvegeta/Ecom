@@ -10,6 +10,7 @@ use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\OrderController;
 use App\Http\Controllers\Frontend\NotificationController;
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -49,16 +50,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'orderShow'])->name('orders.show');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index'); 
     Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');   
-
 });
-Route::prefix('admin')->group(function() {
+Route::prefix('admin')->middleware('admin')->group(function() {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::resource('products', ProductController::class);
     Route::resource('brands', BrandController::class);
     Route::resource('categories', CategoryController::class);
 });
-
-
-
-
-
 require __DIR__.'/auth.php';
