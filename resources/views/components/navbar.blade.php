@@ -73,10 +73,10 @@
                                 <div class="d-flex align-items-start">
                                     <span style="width: 8px; height: 8px; background: #007bff; border-radius: 50%; margin-top: 5px; margin-right: 8px; flex-shrink: 0;"></span>
                                     <div>
-                                       <p class="mb-0" style="font-size: 13px; white-space: normal; word-wrap: break-word;">
-                                        
-    {{ $notification->data['message'] }}
-</p>
+                                        <p class="mb-0" style="font-size: 13px; white-space: normal; word-wrap: break-word;">
+
+                                        {{ $notification->data['message'] }}
+                                        </p>
                                         <small style="color: #86868b;">{{ $notification->created_at->diffForHumans() }}</small>
                                     </div>
                                 </div>

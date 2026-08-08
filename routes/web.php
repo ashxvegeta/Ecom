@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\BrandController;
-use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Admin\ProductController;      // ← Admin\ add
+use App\Http\Controllers\Admin\BrandController;        // ← Admin\ add
+use App\Http\Controllers\Admin\CategoryController;     // ← Admin\ add
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\ProductController as FrontendProductController;
 use App\Http\Controllers\Frontend\CartController;
