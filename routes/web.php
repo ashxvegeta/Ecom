@@ -9,10 +9,9 @@ use App\Http\Controllers\Frontend\ProductController as FrontendProductController
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\OrderController;
+use App\Http\Controllers\Frontend\NotificationController;
 use Illuminate\Support\Facades\Route;
-use App\Mail\OrderConfirmationMail;
-use App\Models\Order;
-use Illuminate\Support\Facades\Mail;
+
 
 
 
@@ -48,6 +47,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/order/success/{id}', [OrderController::class, 'orderSuccess'])->name('order.success');
     Route::get('/orders', [OrderController::class, 'orderIndex'])->name('orders.index');
     Route::get('/orders/{id}', [OrderController::class, 'orderShow'])->name('orders.show');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index'); 
+    Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');   
 
 });
 Route::prefix('admin')->group(function() {
@@ -57,14 +58,7 @@ Route::prefix('admin')->group(function() {
 });
 
 
-Route::get('/test-mail', function () {
-    $order = Order::latest()->first();
 
-    Mail::to('rashutosh758@gmail.com')
-        ->send(new OrderConfirmationMail($order));
-
-    return 'Mail Sent';
-});
 
 
 require __DIR__.'/auth.php';
