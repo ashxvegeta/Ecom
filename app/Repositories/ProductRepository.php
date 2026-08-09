@@ -5,6 +5,7 @@ use App\Models\ProductItem;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;  
 
 
@@ -64,6 +65,15 @@ class ProductRepository  implements  ProductRepositoryInterface{
         $brandIds =  $filters['brand_id'] ?? [];
         $sort  =  $filters['sort'] ?? '';
 
+
+        // redis caching implementation
+        if(empty($search) && empty($maxprice) && empty($categoryIds) && empty($brandIds) && empty($sort)){
+            return Cache::remember('products.listing', 3600, function() {
+                return Product::with(['brand', 'productItems', 'productImages'])
+                                ->active()
+                                ->paginate(5);
+            });
+        }
         $query = Product::with(['brand', 'productItems', 'productImages'])->active();
 
         if ($search != '') {
