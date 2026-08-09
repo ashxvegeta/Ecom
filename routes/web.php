@@ -59,5 +59,7 @@ Route::prefix('admin')->middleware('admin')->group(function() {
     Route::resource('categories', CategoryController::class);
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
     Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
+    Route::patch('/orders/{id}/update-status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+
 });
 require __DIR__.'/auth.php';
