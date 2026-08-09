@@ -11,6 +11,7 @@ use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\OrderController;
 use App\Http\Controllers\Frontend\NotificationController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AdminOrderController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -56,5 +57,7 @@ Route::prefix('admin')->middleware('admin')->group(function() {
     Route::resource('products', ProductController::class);
     Route::resource('brands', BrandController::class);
     Route::resource('categories', CategoryController::class);
+    Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
+    Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
 });
 require __DIR__.'/auth.php';
