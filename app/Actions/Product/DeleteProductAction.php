@@ -27,6 +27,8 @@ class DeleteProductAction
         Storage::disk('public')->delete($imagePaths);
         $this->productRepository->deleteProduct($product);
         });
+        Cache::forget('products.listing');
+        Cache::forget('products.featured');
     }
 
     

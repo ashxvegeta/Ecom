@@ -4,7 +4,7 @@ namespace App\Actions\Product;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
-
+use Illuminate\Support\Facades\Cache;
 // 4. Finally, we will create a service class that will use the ProductRepository to perform the actual business logic for creating a product. This class will be responsible for handling any additional logic that is needed when creating a product, such as generating a unique slug, handling images, and attaching categories.
 class CreateProductAction
 {
@@ -44,5 +44,7 @@ class CreateProductAction
             }
             return $product;
         });
+        Cache::forget('products.listing');
+        Cache::forget('products.featured');
     }
 }

@@ -68,5 +68,7 @@ class UpdateProductAction
 
             return $product;
         });
+        Cache::forget('products.listing');
+        Cache::forget('products.featured');
     }
 }
