@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'orderShow'])->name('orders.show');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index'); 
     Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');   
+    Route::post('/initiate-razorpay', [CheckoutController::class, 'initiateRazorpay'])->name('checkout.initiate-razorpay');
 });
 Route::prefix('admin')->middleware('admin')->group(function() {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
@@ -60,6 +61,7 @@ Route::prefix('admin')->middleware('admin')->group(function() {
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
     Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
     Route::patch('/orders/{id}/update-status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+    
 
 });
 require __DIR__.'/auth.php';

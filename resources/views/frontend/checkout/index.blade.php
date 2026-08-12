@@ -5,6 +5,12 @@
 @section('content')
 
 {{-- Page Header --}}
+<meta name="csrf-token" content="{{ csrf_token() }}">
+@if($errors->any())
+    @foreach($errors->all() as $error)
+        <p style="color:red;">{{ $error }}</p>
+    @endforeach
+@endif
 <section style="background: #f5f5f7; padding: 30px 0;">
     <div class="container">
         <h2 class="font-weight-bold" style="color: #1d1d1f; font-size: 32px;">Checkout</h2>
@@ -14,8 +20,12 @@
 
 {{-- Checkout Section --}}
 <section style="padding: 40px 0; background: #ffffff;">
-    <form action="{{ route('checkout.place-order') }}" method="POST">
+    <form action="{{ route('checkout.place-order') }}" method="POST" id="checkout-form">
         @csrf
+
+        <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+        <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+        <input type="hidden" name="razorpay_signature" id="razorpay_signature">
 
         <div class="container">
             <div class="row">
@@ -93,7 +103,7 @@
                         {{-- Razorpay --}}
                         <div class="p-3" style="border: 1px solid #e5e5e5; border-radius: 12px; cursor: pointer;">
                             <div class="d-flex align-items-center">
-                                <input type="radio" name="payment_method" id="razorpay" value="online" style="width: 18px; height: 18px;">
+                                <input type="radio" name="payment_method" id="razorpay" value="razorpay" style="width: 18px; height: 18px;">
                                 <label for="razorpay" class="ml-3 mb-0" style="cursor: pointer;">
                                     <span class="font-weight-bold" style="color: #1d1d1f; font-size: 15px;">💳 Razorpay</span>
                                     <p class="mb-0" style="color: #86868b; font-size: 13px;">Credit/Debit Card, UPI, Net Banking</p>
@@ -149,9 +159,9 @@
                         {{-- Hidden shipping charge --}}
                         <input type="hidden" name="shipping_charge" value="0">
 
-                        <button type="submit" class="btn btn-dark btn-block btn-lg" style="border-radius: 25px; font-size: 15px; padding: 14px;">
-                            Place Order
-                        </button>
+                       <button type="button" id="place-order-btn" class="btn btn-dark btn-block btn-lg" style="border-radius: 25px;">
+    Place Order
+</button>
 
                         <div class="text-center mt-3">
                             <small style="color: #86868b;">🔒 Secure & Encrypted Payment</small>
@@ -161,7 +171,48 @@
 
             </div>
         </div>
+
     </form>
 </section>
 
+@endsection
+
+
+
+@section('scripts')
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+$('#place-order-btn').on('click', function() {
+    var paymentMethod = $('input[name="payment_method"]:checked').val();
+    if(paymentMethod == 'cod') {
+        $('#checkout-form').submit();
+    } else {
+        $.ajax({
+            url: "{{ route('checkout.initiate-razorpay') }}",
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                var options = {
+                    key: response.key,
+                    amount: response.amount,
+                    currency: 'INR',
+                    order_id: response.order_id,
+                    name: 'TechZone',
+                    handler: function(razorpayResponse) {
+                        alert('Payment successful! Razorpay Payment ID: ' + razorpayResponse.razorpay_payment_id);
+                        $('#razorpay_order_id').val(razorpayResponse.razorpay_order_id);
+                        $('#razorpay_payment_id').val(razorpayResponse.razorpay_payment_id);
+                        $('#razorpay_signature').val(razorpayResponse.razorpay_signature);
+                        $('#checkout-form').submit();
+                    }
+                };
+                var rzp = new Razorpay(options);
+                rzp.open();
+            }
+        });
+    }
+});
+</script>
 @endsection

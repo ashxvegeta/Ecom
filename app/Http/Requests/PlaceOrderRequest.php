@@ -31,7 +31,7 @@ class PlaceOrderRequest extends FormRequest
             'city'            => ['required', 'string', 'max:100'],
             'state'           => ['required', 'string', 'max:100'],
             'pincode'         => ['required', 'string', 'max:10'],
-            'payment_method'  => ['required', 'in:cod,online'],
+            'payment_method' => ['required', 'in:cod,razorpay'], 
             'shipping_charge' => ['nullable', 'numeric', 'min:0'],
         ];
     }
