@@ -80,6 +80,25 @@ class OrderTest extends TestCase
      
     }
 
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function guest_cannot_place_order()
+    {
+        $response = $this->post('/checkout/place-order', [
+            'first_name'     => 'Test',
+            'last_name'      => 'User',
+            'email'          => 'test@test.com',
+            'phone'          => '9876543210',
+            'address'        => '123 Test Street',
+            'city'           => 'Mumbai',
+            'state'          => 'Maharashtra',
+            'pincode'        => '400001',
+            'payment_method' => 'cod',
+        ]);
+
+        // Login pe redirect hona chahiye
+        $response->assertRedirect('/login');
+    }
+
    
   
 }
