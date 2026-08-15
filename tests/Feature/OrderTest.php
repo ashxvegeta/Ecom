@@ -14,7 +14,7 @@ class OrderTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function authenticated_user_can_place_order()
     {
         //1 User banao - login k lia
