@@ -42,6 +42,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [
+        'driver' => 'sanctum', // ← 'token' ki jagah 'sanctum' hona chahiye
+        'provider' => 'users',
+    ],
     ],
 
     /*
