@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Services\CartService;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -22,14 +23,16 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request, CartService $cartService): RedirectResponse
     {
         $request->authenticate();
 
         $request->session()->regenerate();
 
+        $cartService->syncSessionCartToDb();
 
         if(auth()->user()->is_admin) {
+            die('admin');
             return redirect()->intended(route('admin.dashboard', absolute: false));
         }
 

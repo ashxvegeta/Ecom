@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 use App\Models\Product;
+use App\Models\Cart;
 use Illuminate\Support\Collection;
 
 class CartService{
@@ -45,11 +46,35 @@ class CartService{
         return true;
     }
 
-    public function getCheckoutData(){
-       return session()->get('cart',[]);
-    }
+   public function getCheckoutData(): array
+{
+    if(auth()->check()) {
+       $cart = Cart::where('user_id', auth()->id())
+            ->with(['product.productImages', 'product.brand', 'productItem'])
+            ->get();
 
-    public function getCart(){
+     
+        return $cart->map(function($item) {
+            return [
+                'product_id'      => $item->product_id,
+                'product_item_id' => $item->product_item_id,
+                'name'            => $item->product->name,
+                'price'           => $item->price,
+                'quantity'        => $item->quantity,
+                'image' => optional($item->product->productImages->first())->image_path ?? '',
+                'brand'           => $item->product->brand->name ?? '',
+            ];
+        })->toArray();
+    }
+    
+    return session()->get('cart', []);
+}
+    public function getCart(): Collection
+    {
+        if(auth()->check()){
+           return  Cart::where('user_id', auth()->id())->with(['product', 'productItem'])->get();
+        }
+
        return collect(session()->get('cart', []));
     }
 
@@ -67,5 +92,26 @@ class CartService{
     {
         session()->forget('cart');
     }
+
+ public function syncSessionCartToDb(): void
+{
+    $sessionCart = session()->get('cart', []);
+    
+    foreach($sessionCart as $productId => $item) {
+        Cart::updateOrCreate(
+            [
+                'user_id'    => auth()->id(),
+                'product_id' => $productId,
+            ],
+            [
+                'product_item_id' => $item['product_item_id'],
+                'quantity'        => $item['quantity'],
+                'price'           => $item['price'],
+            ]
+        );
+    }
+    
+    session()->forget('cart');
+}
 
 }
