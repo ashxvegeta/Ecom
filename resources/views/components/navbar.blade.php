@@ -47,10 +47,16 @@
                     <a class="nav-link" href="/cart" style="color: #f5f5f7;">
                         <i class="bi bi-bag"></i>
                         @php
-                        $cartItems = session()->get('cart', []);
-                        $cartcount = collect($cartItems)->sum('quantity');
+                            if (auth()->check()) {
+                                $cartcount = \App\Models\Cart::where('user_id', auth()->id())->sum('quantity');
+                            } else {
+                                $cartItems = session()->get('cart', []);
+                                $cartcount = collect($cartItems)->sum('quantity');
+                            }
                         @endphp
+                        @if($cartcount > 0)
                         <span class="badge badge-light" style="font-size: 10px;">{{ $cartcount }}</span>
+                        @endif
                     </a>
                 </li>
 
