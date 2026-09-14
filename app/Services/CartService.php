@@ -28,11 +28,16 @@ class CartService{
     }
 
     public function removecart(int $productId){
-        $cart = session()->get('cart',[]);
-        unset($cart[$productId]);
-        session()->put('cart',$cart);
+        if(auth()->check()) {
+            Cart::where('user_id', auth()->id())
+            ->where('product_id', $productId)
+            ->delete();
+        }else{
+            $cart = session()->get('cart',[]);
+            unset($cart[$productId]);
+            session()->put('cart',$cart);
+        }
         return true;
-
     }
 
     public function updateCartQuantity(int $productId,int $quantity){

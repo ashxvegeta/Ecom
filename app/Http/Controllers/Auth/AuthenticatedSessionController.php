@@ -32,7 +32,7 @@ class AuthenticatedSessionController extends Controller
         $cartService->syncSessionCartToDb();
 
         if(auth()->user()->is_admin) {
-            die('admin');
+          
             return redirect()->intended(route('admin.dashboard', absolute: false));
         }
 
