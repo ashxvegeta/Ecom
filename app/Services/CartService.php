@@ -42,12 +42,18 @@ class CartService{
 
     public function updateCartQuantity(int $productId,int $quantity){
         
+     if(auth()->check()) {
+        Cart::where('user_id', auth()->id())
+        ->where('product_id', $productId)
+         ->update(['quantity' => $quantity]);
+     }else{
         $cart = session()->get('cart',[]);
         if(!isset($cart[$productId])){
             return false;
         }
         $cart[$productId]['quantity'] = $quantity;
         session()->put('cart',$cart);
+     }
         return true;
     }
 
