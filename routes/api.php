@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\BrandController;
+use App\Http\Controllers\Api\CartController;
 
 //Auth API complete
 Route::post('/register', [AuthController::class, 'register']);
@@ -13,6 +14,8 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function() {
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/cart',[CartController::class,'index']);
+    Route::post('/cart/sync',[CartController::class,'sync']);
 });
 
 // products API
