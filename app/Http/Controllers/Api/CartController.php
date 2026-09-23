@@ -7,11 +7,15 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Cart;
 use App\Http\Resources\CartResource;
+use App\Services\CartService;
 
 
 class CartController extends Controller
 {
     //
+
+    public function __construct(private CartService $cartService) {}
+
     public function index(Request $request){
         $cart = Cart::where('user_id',auth()->id())
         ->with(['product.productImages','product.brand','productItem'])
@@ -43,5 +47,20 @@ class CartController extends Controller
             'status'  => true,
             'message' => 'Cart synced successfully'
         ]);
+    }
+
+    public function removeFromCart(int $id){
+      $removed = $this->cartService->removecart($id);
+      if(!$removed){
+         return response()->json([
+            'status'  => false,
+            'message' => 'Item not found'
+        ], 404);
+      }
+      return response()->json([
+        'status'=>true,
+        'message'=>'Cart removed successfully'
+      ]);
+     
     }
 }

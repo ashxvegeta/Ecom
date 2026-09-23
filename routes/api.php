@@ -16,6 +16,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/cart',[CartController::class,'index']);
     Route::post('/cart/sync',[CartController::class,'sync']);
+    Route::post('/cart/remove/{id}',[CartController::class,'removeFromCart']);
 });
 
 // products API

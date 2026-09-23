@@ -29,15 +29,16 @@ class CartService{
 
     public function removecart(int $productId){
         if(auth()->check()) {
-            Cart::where('user_id', auth()->id())
+            $deleted =  Cart::where('user_id', auth()->id())
             ->where('product_id', $productId)
             ->delete();
+            return  $deleted >0 ;
         }else{
             $cart = session()->get('cart',[]);
             unset($cart[$productId]);
             session()->put('cart',$cart);
+            return true;
         }
-        return true;
     }
 
     public function updateCartQuantity(int $productId,int $quantity){
