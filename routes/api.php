@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\OrderController;
 
 //Auth API complete
 Route::post('/register', [AuthController::class, 'register']);
@@ -17,6 +18,9 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/cart',[CartController::class,'index']);
     Route::post('/cart/sync',[CartController::class,'sync']);
     Route::post('/cart/remove/{id}',[CartController::class,'removeFromCart']);
+    Route::post('/orders', [OrderController::class, 'placeOrder']);
+    Route::get('/orderslist', [OrderController::class, 'orderList']);
+    Route::get('/ordersdetails/{id}', [OrderController::class, 'orderDetails']);
 });
 
 // products API

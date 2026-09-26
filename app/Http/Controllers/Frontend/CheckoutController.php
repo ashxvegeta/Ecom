@@ -36,6 +36,7 @@ class CheckoutController extends Controller
        public function placeOrder(PlaceOrderRequest $request, PlaceOrderAction $action)
     {
 
+ 
         
         if($request->payment_method == 'cod') {
             $order = $action->execute($request->validated());

@@ -84,7 +84,16 @@ class CartService{
     public function getCart(): Collection
     {
         if(auth()->check()){
-           return  Cart::where('user_id', auth()->id())->with(['product', 'productItem'])->get();
+           return  Cart::where('user_id', auth()->id())->with(['product', 'productItem'])->get()
+             ->map(function($item) {
+                return [
+                    'product_id'      => $item->product_id,
+                    'product_item_id' => $item->product_item_id,
+                    'name'            => $item->product->name,
+                    'price'           => $item->price,
+                    'quantity'        => $item->quantity,
+                ];
+            });
         }
 
        return collect(session()->get('cart', []));
