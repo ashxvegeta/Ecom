@@ -21,7 +21,7 @@ class ProductItemFactory extends Factory
         return [
             //
         'product_id' => Product::factory(),
-        'sku'        => $this->faker->unique()->bothify('SKU-####'),
+        'sku'        => $this->faker->unique()->word(),
         'price'      => $this->faker->randomFloat(2, 1000, 100000),
         'stock'      => 10,
         'status'     => 1,
