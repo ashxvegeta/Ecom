@@ -56,8 +56,8 @@ class PlaceOrderAction
             $this->orderRepository->createOrderItems($order,$cart);
             // reduce stock
             $this->orderRepository->reduceStock($cart);
-            //clear session cart
-            $this->cartService->clearCart();
+            // clear cart
+            $this->cartService->clearCart($order->user_id ?? auth()->id());
 
             //fire  event
             event(new OrderPlaced($order));

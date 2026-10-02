@@ -201,7 +201,7 @@ $('#place-order-btn').on('click', function() {
                     order_id: response.order_id,
                     name: 'TechZone',
                     handler: function(razorpayResponse) {
-                        alert('Payment successful! Razorpay Payment ID: ' + razorpayResponse.razorpay_payment_id);
+                      //  alert('Payment successful! Razorpay Payment ID: ' + razorpayResponse.razorpay_payment_id);
                         $('#razorpay_order_id').val(razorpayResponse.razorpay_order_id);
                         $('#razorpay_payment_id').val(razorpayResponse.razorpay_payment_id);
                         $('#razorpay_signature').val(razorpayResponse.razorpay_signature);

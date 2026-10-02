@@ -8,16 +8,37 @@ class CartService{
 
    public function add(int  $productId,int $quantity){
         $product = Product::with(['productItems','productImages','brand'])->findOrFail($productId);
+        $productItem = $product->productItems->first();
+
+        if(auth()->check()) {
+            $cartItem = Cart::where('user_id', auth()->id())
+                ->where('product_id', $productId)
+                ->first();
+
+            if ($cartItem) {
+                $cartItem->increment('quantity', $quantity);
+            } else {
+                Cart::create([
+                    'user_id'         => auth()->id(),
+                    'product_id'      => $productId,
+                    'product_item_id' => $productItem?->id,
+                    'quantity'        => $quantity,
+                    'price'           => $productItem?->price ?? 0,
+                ]);
+            }
+            return true;
+        }
+
         $cart =  session()->get('cart',[]);
         if(isset($cart[$productId])){
            $cart[$productId]['quantity'] += $quantity;
         }else{
             $cart[$productId] = [
-            'product_item_id' => $product->productItems->first()->id,
-            'brand'      =>$product->brand->name,
+            'product_item_id' => $productItem?->id,
+            'brand'      =>$product->brand->name ?? '',
             'product_id' => $productId,
             'name'       => $product->name,
-            'price'      => $product->productItems->first()->price,
+            'price'      => $productItem?->price ?? 0,
             'quantity'   => $quantity,
             'image'      => $product->productImages->first()?->image_path,
             ];
@@ -109,9 +130,14 @@ class CartService{
         });
     }
 
-        public function clearCart()
+    public function clearCart(?int $userId = null): void
     {
         session()->forget('cart');
+
+        $userId = $userId ?? auth()->id();
+        if ($userId) {
+            Cart::where('user_id', $userId)->delete();
+        }
     }
 
  public function syncSessionCartToDb(): void
