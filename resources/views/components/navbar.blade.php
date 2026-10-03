@@ -118,12 +118,12 @@
 
                 {{-- Guest --}}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('login') }}" style="color: #f5f5f7; font-size: 14px;">
+                    <a class="nav-link {{ request()->routeIs('login') ? 'active font-weight-bold text-white' : '' }}" href="{{ route('login') }}" style="color: #f5f5f7; font-size: 14px;">
                         <i class="bi bi-person"></i> Login
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('register') }}" style="color: #f5f5f7; font-size: 14px;">
+                <li class="nav-item ml-lg-2 mt-2 mt-lg-0">
+                    <a class="btn btn-sm px-3" href="{{ route('register') }}" style="border-radius: 20px; font-size: 13px; font-weight: 600; color: #000000; background-color: #ffffff; border: 1px solid #ffffff; transition: all 0.2s;">
                         Register
                     </a>
                 </li>
