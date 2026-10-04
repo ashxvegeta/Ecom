@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Enums\OrderStatus;
+use App\Models\ProductItem;
 
 class OrderController extends Controller
 {
@@ -29,6 +31,25 @@ class OrderController extends Controller
             'items.product.brand',
         ])->findOrFail($id);
         return view('frontend.orders.show', compact('order'));
+    }
+
+    public function cancelOrder($id)
+    {
+        $order = auth()->user()->orders()->findOrFail($id);
+            // Prevent cancelling if already cancelled (avoids adding stock twice)
+    if ($order->order_status === OrderStatus::CANCELLED) {
+        return redirect()->back()->with('error', 'This order is already cancelled.');
+    }
+        $order->order_status = OrderStatus::CANCELLED;
+        $order->save();
+        $orderItems = $order->items()->get();
+        // 2. Restore stock for each item
+        foreach ($order->items as $orderItem) {
+            if ($orderItem->product_item_id) {
+                ProductItem::where('id', $orderItem->product_item_id)->increment('stock', $orderItem->quantity);
+            }
+        }
+        return redirect()->back()->with('success', 'Order cancelled successfully.');
     }
 
 }

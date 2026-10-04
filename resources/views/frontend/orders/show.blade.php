@@ -20,6 +20,11 @@
 {{-- Order Detail Section --}}
 <section style="padding: 40px 0; background: #ffffff;">
     <div class="container">
+
+    
+
+   
+
         <div class="row">
 
             {{-- Left --}}
@@ -28,43 +33,66 @@
                 {{-- Order Tracking --}}
                 <div class="p-4 shadow-sm mb-4" style="border-radius: 16px; border: 1px solid #e5e5e5;">
                     <h5 class="font-weight-bold mb-4" style="color: #1d1d1f;">Order Tracking</h5>
-                    <div class="d-flex justify-content-between align-items-center">
 
-                        {{-- Step 1 --}}
-                        <div class="text-center">
-                            <div style="width: 40px; height: 40px; border-radius: 50%; background: #1d1d1f; color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 16px;">✓</div>
-                            <p class="mt-2 mb-0" style="font-size: 12px; color: #1d1d1f; font-weight: 600;">Order Placed</p>
-                            <p style="font-size: 11px; color: #86868b;">15 Jul 2024</p>
+                    @php
+                        $status = $order->order_status->value ?? 'pending';
+                        $isCancelled = ($status === 'cancelled');
+                        $isConfirmed = in_array($status, ['confirmed', 'shipped', 'delivered']);
+                        $isShipped   = in_array($status, ['shipped', 'delivered']);
+                        $isDelivered = ($status === 'delivered');
+                    @endphp
+
+                    @if($isCancelled)
+                        <div class="p-3 text-center" style="background: #fff5f5; border: 1px dashed #feb2b2; border-radius: 12px;">
+                            <div style="width: 44px; height: 44px; border-radius: 50%; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 20px; font-weight: bold;">✕</div>
+                            <h6 class="font-weight-bold mb-1" style="color: #dc2626;">Order Cancelled</h6>
+                            <p class="mb-0" style="font-size: 13px; color: #86868b;">This order was placed on {{ $order->created_at->format('d M Y') }} and has been cancelled.</p>
                         </div>
+                    @else
+                        <div class="d-flex justify-content-between align-items-center">
 
-                        <div style="flex: 1; height: 2px; background: #1d1d1f; margin: 0 10px; margin-bottom: 30px;"></div>
+                            {{-- Step 1: Placed --}}
+                            <div class="text-center">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #1d1d1f; color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 16px;">✓</div>
+                                <p class="mt-2 mb-0" style="font-size: 12px; color: #1d1d1f; font-weight: 600;">Order Placed</p>
+                                <p style="font-size: 11px; color: #86868b;">{{ $order->created_at->format('d M Y') }}</p>
+                            </div>
 
-                        {{-- Step 2 --}}
-                        <div class="text-center">
-                            <div style="width: 40px; height: 40px; border-radius: 50%; background: #1d1d1f; color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 16px;">✓</div>
-                            <p class="mt-2 mb-0" style="font-size: 12px; color: #1d1d1f; font-weight: 600;">Confirmed</p>
-                            <p style="font-size: 11px; color: #86868b;">15 Jul 2024</p>
+                            <div style="flex: 1; height: 2px; background: {{ $isConfirmed ? '#1d1d1f' : '#e5e5e5' }}; margin: 0 10px; margin-bottom: 30px;"></div>
+
+                            {{-- Step 2: Confirmed --}}
+                            <div class="text-center">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: {{ $isConfirmed ? '#1d1d1f' : '#e5e5e5' }}; color: {{ $isConfirmed ? 'white' : '#86868b' }}; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 16px;">
+                                    {{ $isConfirmed ? '✓' : '2' }}
+                                </div>
+                                <p class="mt-2 mb-0" style="font-size: 12px; color: {{ $isConfirmed ? '#1d1d1f' : '#86868b' }}; font-weight: 600;">Confirmed</p>
+                                <p style="font-size: 11px; color: #86868b;">{{ $isConfirmed ? 'Confirmed' : 'Pending' }}</p>
+                            </div>
+
+                            <div style="flex: 1; height: 2px; background: {{ $isShipped ? '#1d1d1f' : '#e5e5e5' }}; margin: 0 10px; margin-bottom: 30px;"></div>
+
+                            {{-- Step 3: Shipped --}}
+                            <div class="text-center">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: {{ $isShipped ? '#1d1d1f' : '#e5e5e5' }}; color: {{ $isShipped ? 'white' : '#86868b' }}; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 16px;">
+                                    {{ $isShipped ? '✓' : '📦' }}
+                                </div>
+                                <p class="mt-2 mb-0" style="font-size: 12px; color: {{ $isShipped ? '#1d1d1f' : '#86868b' }}; font-weight: 600;">Shipped</p>
+                                <p style="font-size: 11px; color: #86868b;">{{ $isShipped ? ($isDelivered ? 'Completed' : 'In Transit') : 'Pending' }}</p>
+                            </div>
+
+                            <div style="flex: 1; height: 2px; background: {{ $isDelivered ? '#1d1d1f' : '#e5e5e5' }}; margin: 0 10px; margin-bottom: 30px;"></div>
+
+                            {{-- Step 4: Delivered --}}
+                            <div class="text-center">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: {{ $isDelivered ? '#34c759' : '#e5e5e5' }}; color: {{ $isDelivered ? 'white' : '#86868b' }}; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 16px;">
+                                    {{ $isDelivered ? '✓' : '🏠' }}
+                                </div>
+                                <p class="mt-2 mb-0" style="font-size: 12px; color: {{ $isDelivered ? '#1d1d1f' : '#86868b' }}; font-weight: 600;">Delivered</p>
+                                <p style="font-size: 11px; color: #86868b;">{{ $isDelivered ? 'Delivered' : 'Pending' }}</p>
+                            </div>
+
                         </div>
-
-                        <div style="flex: 1; height: 2px; background: #e5e5e5; margin: 0 10px; margin-bottom: 30px;"></div>
-
-                        {{-- Step 3 --}}
-                        <div class="text-center">
-                            <div style="width: 40px; height: 40px; border-radius: 50%; background: #e5e5e5; color: #86868b; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 16px;">📦</div>
-                            <p class="mt-2 mb-0" style="font-size: 12px; color: #86868b; font-weight: 600;">Shipped</p>
-                            <p style="font-size: 11px; color: #86868b;">Pending</p>
-                        </div>
-
-                        <div style="flex: 1; height: 2px; background: #e5e5e5; margin: 0 10px; margin-bottom: 30px;"></div>
-
-                        {{-- Step 4 --}}
-                        <div class="text-center">
-                            <div style="width: 40px; height: 40px; border-radius: 50%; background: #e5e5e5; color: #86868b; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 16px;">🏠</div>
-                            <p class="mt-2 mb-0" style="font-size: 12px; color: #86868b; font-weight: 600;">Delivered</p>
-                            <p style="font-size: 11px; color: #86868b;">Pending</p>
-                        </div>
-
-                    </div>
+                    @endif
                 </div>
 
                 {{-- Order Items --}}
@@ -130,6 +158,25 @@
                         <p class="mb-1" style="color: #86868b; font-size: 12px;">Payment Status</p>
                         <span class="badge badge-{{ $order->payment_status->color() }}" style="border-radius: 20px; padding: 5px 10px;">{{ $order->payment_status->label() }}</span>
                     </div>
+
+                    @if($order->order_status === \App\Enums\OrderStatus::CANCELLED)
+    <div class="p-3 text-center" style="background: #fee2e2; border-radius: 12px; color: #dc2626; font-size: 14px; font-weight: 600;">
+        ✕ Order Cancelled
+    </div>
+@elseif($order->order_status === \App\Enums\OrderStatus::DELIVERED)
+    <div class="p-3 text-center" style="background: #dcfce7; border-radius: 12px; color: #16a34a; font-size: 14px; font-weight: 600;">
+        ✓ Order Delivered
+    </div>
+@else
+    <form action="{{ route('orders.cancel', $order->id) }}" method="POST">
+        @csrf
+        <button type="submit" class="btn btn-outline-danger btn-block font-weight-bold" style="border-radius: 12px; padding: 10px; font-size: 14px;">
+            Cancel Order
+        </button>
+    </form>
+@endif
+
+                    
 
                 </div>
             </div>

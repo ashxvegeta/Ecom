@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index'); 
     Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');   
     Route::post('/initiate-razorpay', [CheckoutController::class, 'initiateRazorpay'])->name('checkout.initiate-razorpay');
+    Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder'])->name('orders.cancel');
 });
 Route::prefix('admin')->middleware('admin')->group(function() {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
