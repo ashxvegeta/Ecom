@@ -35,4 +35,20 @@ class PlaceOrderRequest extends FormRequest
             'shipping_charge' => ['nullable', 'numeric', 'min:0'],
         ];
     }
+
+    public function messages():array
+    {
+       return [
+            'first_name.required' => 'first name required',
+            'last_name.required' => 'last name required',
+            'email.required' => 'email required',
+            'phone.required' => 'phone required',
+            'address.required' => 'address required',
+            'city.required' => 'city required',
+            'state.required' => 'state required',
+            'pincode.required' => 'pincode required',
+            'payment_method.required' => 'payment method required',
+            'shipping_charge.required' => 'shipping charge required',
+        ];
+    }
 }

@@ -27,10 +27,11 @@ class CheckoutController extends Controller
 
     public function index()
     {    
-
         $checkoutdata = $this->cartService->getCheckoutData();
+        if(empty($checkoutdata)){
+            return redirect()->route('home');
+        }
         return view('frontend.checkout.index',compact('checkoutdata'));
-
     }
 
        public function placeOrder(PlaceOrderRequest $request, PlaceOrderAction $action)

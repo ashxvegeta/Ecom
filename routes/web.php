@@ -21,9 +21,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // product listing k lia
 Route::get('/products-list', [FrontendProductController::class, 'index']);
 Route::get('/products/{slug}', [FrontendProductController::class, 'show']);
-Route::get('/checkout', function () {
-    return view('frontend.checkout.index');
-});
+
 
 Route::get('/orders', function () {
     return view('frontend.orders.index');

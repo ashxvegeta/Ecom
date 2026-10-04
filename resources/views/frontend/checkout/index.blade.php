@@ -6,11 +6,7 @@
 
 {{-- Page Header --}}
 <meta name="csrf-token" content="{{ csrf_token() }}">
-@if($errors->any())
-    @foreach($errors->all() as $error)
-        <p style="color:red;">{{ $error }}</p>
-    @endforeach
-@endif
+
 <section style="background: #f5f5f7; padding: 30px 0;">
     <div class="container">
         <h2 class="font-weight-bold" style="color: #1d1d1f; font-size: 32px;">Checkout</h2>
@@ -44,40 +40,64 @@
                             <div class="col-md-6 mb-3">
                                 <label style="color: #1d1d1f; font-size: 13px; font-weight: 600;">First Name</label>
                                 <input type="text" name="first_name" value="{{ old('first_name') }}" class="form-control mt-1" placeholder="John" style="border-radius: 10px; border: 1px solid #e5e5e5; font-size: 14px;" required>
+                                @error('first_name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label style="color: #1d1d1f; font-size: 13px; font-weight: 600;">Last Name</label>
                                 <input type="text" name="last_name" value="{{ old('last_name') }}" class="form-control mt-1" placeholder="Doe" style="border-radius: 10px; border: 1px solid #e5e5e5; font-size: 14px;" required>
+                                @error('last_name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label style="color: #1d1d1f; font-size: 13px; font-weight: 600;">Email</label>
                             <input type="email" name="email" value="{{ old('email') }}" class="form-control mt-1" placeholder="john@example.com" style="border-radius: 10px; border: 1px solid #e5e5e5; font-size: 14px;" required>
+                            @error('email')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <label style="color: #1d1d1f; font-size: 13px; font-weight: 600;">Phone</label>
                             <input type="tel" name="phone" value="{{ old('phone') }}" class="form-control mt-1" placeholder="+91 98765 43210" style="border-radius: 10px; border: 1px solid #e5e5e5; font-size: 14px;" required>
+                            @error('phone')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <label style="color: #1d1d1f; font-size: 13px; font-weight: 600;">Address</label>
                             <textarea name="address" class="form-control mt-1" rows="3" placeholder="Enter your full address" style="border-radius: 10px; border: 1px solid #e5e5e5; font-size: 14px;" required>{{ old('address') }}</textarea>
-                        </div>
+                            </div>
+                            @error('address')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
 
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label style="color: #1d1d1f; font-size: 13px; font-weight: 600;">City</label>
                                 <input type="text" name="city" value="{{ old('city') }}" class="form-control mt-1" placeholder="Mumbai" style="border-radius: 10px; border: 1px solid #e5e5e5; font-size: 14px;" required>
+                                @error('city')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label style="color: #1d1d1f; font-size: 13px; font-weight: 600;">State</label>
                                 <input type="text" name="state" value="{{ old('state') }}" class="form-control mt-1" placeholder="Maharashtra" style="border-radius: 10px; border: 1px solid #e5e5e5; font-size: 14px;" required>
+                                @error('state')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label style="color: #1d1d1f; font-size: 13px; font-weight: 600;">Pincode</label>
                                 <input type="text" name="pincode" value="{{ old('pincode') }}" class="form-control mt-1" placeholder="400001" style="border-radius: 10px; border: 1px solid #e5e5e5; font-size: 14px;" required>
+                                @error('pincode')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                     </div>
