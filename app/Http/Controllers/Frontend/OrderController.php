@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Enums\OrderStatus;
 use App\Models\ProductItem;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -33,23 +34,44 @@ class OrderController extends Controller
         return view('frontend.orders.show', compact('order'));
     }
 
+  
+
+
     public function cancelOrder($id)
-    {
-        $order = auth()->user()->orders()->findOrFail($id);
-            // Prevent cancelling if already cancelled (avoids adding stock twice)
-    if ($order->order_status === OrderStatus::CANCELLED) {
-        return redirect()->back()->with('error', 'This order is already cancelled.');
-    }
+{
+    return DB::transaction(function () use ($id) {
+        // 1. Lock the order row for update and load items
+        $order = auth()->user()->orders()
+            ->where('id', $id)
+            ->with('items')
+            ->lockForUpdate()
+            ->firstOrFail();
+
+        // 2. Prevent duplicate cancellation
+        if ($order->order_status === OrderStatus::CANCELLED) {
+            return redirect()->back()->with('error', 'This order is already cancelled.');
+        }
+
+        // 3. Prevent cancelling delivered orders
+        if ($order->order_status === OrderStatus::DELIVERED) {
+            return redirect()->back()->with('error', 'Delivered orders cannot be cancelled.');
+        }
+
+        // 4. Update status
         $order->order_status = OrderStatus::CANCELLED;
         $order->save();
-        $orderItems = $order->items()->get();
-        // 2. Restore stock for each item
+
+        // 5. Restore stock for each item
         foreach ($order->items as $orderItem) {
             if ($orderItem->product_item_id) {
-                ProductItem::where('id', $orderItem->product_item_id)->increment('stock', $orderItem->quantity);
+                ProductItem::where('id', $orderItem->product_item_id)
+                    ->increment('stock', $orderItem->quantity);
             }
         }
+
         return redirect()->back()->with('success', 'Order cancelled successfully.');
-    }
+    });
+}
+
 
 }
