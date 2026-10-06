@@ -8,6 +8,8 @@ use App\Models\Order;
 use App\Enums\OrderStatus;
 use App\Models\ProductItem;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\OrderCancelledNotification;
+
 
 class OrderController extends Controller
 {
@@ -60,6 +62,8 @@ class OrderController extends Controller
         // 4. Update status
         $order->order_status = OrderStatus::CANCELLED;
         $order->save();
+
+        $order->user->notify(new OrderCancelledNotification($order));
 
         // 5. Restore stock for each item
         foreach ($order->items as $orderItem) {
