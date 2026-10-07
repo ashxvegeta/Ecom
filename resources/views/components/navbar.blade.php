@@ -65,13 +65,10 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="#" data-toggle="dropdown" style="color: #f5f5f7;">
                         <i class="bi bi-bell"></i>
-                        @if(auth()->user()->unreadNotifications->count() > 0)
-                            <span class="badge badge-danger" style="font-size: 10px;">
-                                {{ auth()->user()->unreadNotifications->count() }}
-                            </span>
-                        @endif
+                        <span id="nav-notification-badge" class="badge badge-danger {{ auth()->user()->unreadNotifications->count() > 0 ? '' : 'd-none' }}" style="font-size: 10px;">
+                            {{ auth()->user()->unreadNotifications->count() }}
+                        </span>
                     </a>
-                     @if(auth()->user()->unreadNotifications->count() > 0)
                     <div class="dropdown-menu dropdown-menu-right" style="width: 300px;">
                         <h6 class="dropdown-header">Notifications</h6>
                         @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
@@ -80,22 +77,20 @@
                                     <span style="width: 8px; height: 8px; background: #007bff; border-radius: 50%; margin-top: 5px; margin-right: 8px; flex-shrink: 0;"></span>
                                     <div>
                                         <p class="mb-0" style="font-size: 13px; white-space: normal; word-wrap: break-word;">
-
-                                        {{ $notification->data['message'] }}
+                                            {{ $notification->data['message'] ?? 'New notification' }}
                                         </p>
                                         <small style="color: #86868b;">{{ $notification->created_at->diffForHumans() }}</small>
                                     </div>
                                 </div>
                             </a>
                         @empty
-                            <p class="dropdown-item mb-0" style="color: #86868b; font-size: 13px;">No notifications</p>
+                            <p class="dropdown-item mb-0" style="color: #86868b; font-size: 13px;">No unread notifications</p>
                         @endforelse
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item text-center" href="/notifications" style="font-size: 13px;">
                             View all notifications →
                         </a>
                     </div>
-                    @endif
                 </li>
 
                 {{-- User Dropdown --}}
@@ -133,3 +128,32 @@
         </div>
     </div>
 </nav>
+
+@auth
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function refreshNotificationBadge() {
+            fetch('{{ route('notifications.unreadCount') }}')
+                .then(function(res) {
+                    if (res.ok) return res.json();
+                    throw new Error('Network error');
+                })
+                .then(function(data) {
+                    var badge = document.getElementById('nav-notification-badge');
+                    if (badge && typeof data.count !== 'undefined') {
+                        if (data.count > 0) {
+                            badge.textContent = data.count;
+                            badge.classList.remove('d-none');
+                        } else {
+                            badge.classList.add('d-none');
+                        }
+                    }
+                })
+                .catch(function(err) {});
+        }
+
+        // Check for new notifications every 10 seconds in the background
+        setInterval(refreshNotificationBadge, 10000);
+    });
+</script>
+@endauth

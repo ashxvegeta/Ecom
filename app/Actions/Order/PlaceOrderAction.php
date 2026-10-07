@@ -59,7 +59,12 @@ class PlaceOrderAction
             // clear cart
             $this->cartService->clearCart($order->user_id ?? auth()->id());
 
-            //fire  event
+            // Save in-app notification immediately so it shows instantly on success page
+            if ($order->user) {
+                $order->user->notify(new \App\Notifications\OrderPlacedNotification($order));
+            }
+
+            // fire event for email in background
             event(new OrderPlaced($order));
 
             return $order;

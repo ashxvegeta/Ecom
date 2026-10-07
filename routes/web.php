@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'orderIndex'])->name('orders.index');
     Route::get('/orders/{id}', [OrderController::class, 'orderShow'])->name('orders.show');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index'); 
+    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unreadCount');
     Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');   
     Route::post('/initiate-razorpay', [CheckoutController::class, 'initiateRazorpay'])->name('checkout.initiate-razorpay');
     Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder'])->name('orders.cancel');

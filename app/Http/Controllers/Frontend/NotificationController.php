@@ -23,4 +23,11 @@ class NotificationController extends Controller
             return redirect()->back()->with('error', 'Notification not found.');
         }
     }
+
+    public function unreadCount()
+    {
+        return response()->json([
+            'count' => auth()->check() ? auth()->user()->unreadNotifications()->count() : 0,
+        ]);
+    }
 }
