@@ -70,8 +70,8 @@ class OrderController extends Controller
         $order->user->notify(new OrderCancelledNotification($order));
 
         // notify the admin
-        $admin = User::where('is_admin','1')->get();
-        Notification::send($admin,new AdminOrderCancelledNotification($order));
+        $admin = User::where('is_admin','1')->first();
+        $admin?->notify(new AdminOrderCancelledNotification($order));
 
         // 5. Restore stock for each item
         foreach ($order->items as $orderItem) {
