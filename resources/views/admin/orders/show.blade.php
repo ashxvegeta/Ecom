@@ -11,6 +11,12 @@
         <p style="color: #86868b; font-size: 13px; margin: 0;">{{ $order->created_at->format('d M Y, h:i A') }}</p>
     </div>
     <div class="d-flex align-items-center">
+        @if($order->order_status === \App\Enums\OrderStatus::CANCELLED)
+                       <span class="badge badge-danger" style="border-radius: 20px; padding: 8px 16px; font-size: 14px;">
+                ✕ Cancelled
+            </span>
+
+        @else
         {{-- Status Update Form --}}
         <form method="POST" action="{{ route('admin.orders.updateStatus', $order->id) }}" class="d-flex align-items-center">
             @csrf
@@ -26,12 +32,27 @@
                 Update Status
             </button>
         </form>
+        @endif
+        
         <a href="{{ route('admin.orders.index') }}" class="btn btn-outline-dark ml-2" style="border-radius: 8px;">
             ← Back
         </a>
     </div>
 </div>
-
+@if($order->order_status === \App\Enums\OrderStatus::CANCELLED)
+    <div class="alert alert-danger mb-4 d-flex align-items-center" style="border-radius: 12px; background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 16px 20px;">
+        <span style="font-size: 24px; margin-right: 15px;">⚠️</span>
+        <div>
+            <h6 class="font-weight-bold mb-1" style="color: #991b1b;">Order Cancelled by Customer</h6>
+            <p class="mb-0" style="font-size: 13px; color: #7f1d1d;">
+                This order was cancelled on {{ $order->updated_at->format('d M Y, h:i A') }}. <strong>Do not pack or dispatch this order.</strong>
+                @if($order->payment_method->value === 'razorpay' && $order->payment_status->value === 'paid')
+                    <br><span class="badge badge-warning text-dark mt-1 font-weight-bold">Refund Needed</span> Paid online via Razorpay. Please initiate refund in your Razorpay dashboard.
+                @endif
+            </p>
+        </div>
+    </div>
+@endif
 <div class="row">
 
     {{-- Left — Order Items --}}

@@ -97,14 +97,29 @@
     </div>
 
     {{-- Topbar --}}
+       {{-- Topbar --}}
     <div class="topbar d-flex justify-content-between align-items-center">
         <h6 class="mb-0 font-weight-bold" style="color: #1d1d1f;">@yield('title', 'Dashboard')</h6>
-        <div>
+        <div class="d-flex align-items-center">
+
+            {{-- Notification Bell --}}
+            <a href="/notifications" class="text-dark mr-4 position-relative" style="font-size: 18px; text-decoration: none;">
+                <i class="bi bi-bell"></i>
+                @php
+                    $unreadCount = auth()->user()->unreadNotifications->count();
+                @endphp
+                <span class="badge badge-danger position-absolute {{ $unreadCount > 0 ? '' : 'd-none' }}" style="top: -6px; right: -10px; font-size: 10px; border-radius: 10px; padding: 3px 6px;">
+                    {{ $unreadCount }}
+                </span>
+            </a>
+
+            {{-- Admin Name --}}
             <span style="color: #86868b; font-size: 14px;">
                 <i class="bi bi-person-circle"></i> {{ auth()->user()->name }}
             </span>
         </div>
     </div>
+
 
     {{-- Main Content --}}
     <div class="main-content">

@@ -9,6 +9,10 @@ use App\Enums\OrderStatus;
 use App\Models\ProductItem;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\OrderCancelledNotification;
+use App\Notifications\AdminOrderCancelledNotification;
+use App\Models\User;
+use Illuminate\Support\Facades\Notification;
+
 
 
 class OrderController extends Controller
@@ -62,8 +66,12 @@ class OrderController extends Controller
         // 4. Update status
         $order->order_status = OrderStatus::CANCELLED;
         $order->save();
-
+        // notify the customer
         $order->user->notify(new OrderCancelledNotification($order));
+
+        // notify the admin
+        $admin = User::where('is_admin','1')->get();
+        Notification::send($admin,new AdminOrderCancelledNotification($order));
 
         // 5. Restore stock for each item
         foreach ($order->items as $orderItem) {
