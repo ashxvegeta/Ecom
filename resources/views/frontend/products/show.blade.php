@@ -55,8 +55,13 @@
 
                 {{-- Stock --}}
                 <div class="mb-4">
-                    <span class="badge badge-success" style="font-size: 13px; padding: 6px 12px; border-radius: 20px;">
-                        {{$product->productItems->first()->stock > 0 ? '✓ In Stock':'Out of Stock'}}   
+                      @php
+                      $stock = $product->productItems->first()->stock;
+                      $stockText = $stock > 0 ? '✓ In Stock' : 'Out of Stock';
+                      $stockClass = $stock == 0 ? 'badge-danger' : 'badge-success'; 
+                      @endphp
+                    <span class="{{$stockClass}}" style="font-size: 13px; padding: 6px 12px; border-radius: 20px;">
+                        {{$stockText}}   
                     </span>
                 </div>
 
@@ -69,6 +74,10 @@
                 <div class="mb-4">
                     <label style="color: #1d1d1f; font-weight: 600; font-size: 14px;">Quantity</label>
                    <div class="d-flex align-items-center mt-2">
+    @php
+    $stock = $product->productItems->first()->stock;
+    @endphp
+    @if($stock>0)
     <button class="btn btn-outline-dark btn-sm qty-minus" 
             style="border-radius: 50%; width: 36px; height: 36px; padding: 0;">−</button>
     
@@ -80,7 +89,9 @@
     
     <button class="btn btn-outline-dark btn-sm qty-plus"
             style="border-radius: 50%; width: 36px; height: 36px; padding: 0;">+</button>
+   @endif
 </div>
+
                 </div>
 
                 {{-- Buttons --}}
@@ -89,13 +100,15 @@
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                      <input type="hidden" name="quantity" value="1" class="qty-hidden">
-                    <button type="submit"  class="btn btn-dark btn-lg btn-block mb-3" style="border-radius: 25px; font-size: 16px; padding: 14px;">
-                        <i class="bi bi-bag"></i> Add to Cart
+                     
+                    <button  type="submit"   @if($stock<=0) disabled @endif class="btn btn-dark btn-lg btn-block mb-3 " style="border-radius: 25px; font-size: 16px; padding: 14px;">
+                        <i class="bi bi-bag"></i> {{ $stock > 0 ? 'Add to Cart' : 'Out of Stock' }}
                     </button>
-                  
-                    <button class="btn btn-outline-dark btn-lg btn-block" style="border-radius: 25px; font-size: 16px; padding: 14px;">
+                    @if($stock>0)  
+                    <button   class="btn btn-outline-dark btn-lg btn-block" style="border-radius: 25px; font-size: 16px; padding: 14px;">
                         ⚡ Buy Now
                     </button>
+                    @endif  
                       </form>
                 </div>
 

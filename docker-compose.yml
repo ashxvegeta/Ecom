@@ -1,0 +1,56 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: techzone_app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    networks:
+      - techzone
+
+  nginx:
+    image: nginx:alpine
+    container_name: techzone_nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - techzone
+
+  mysql:
+    image: mysql:8.0
+    container_name: techzone_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: techzone
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: secret
+      MYSQL_USER: techzone
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - techzone
+
+  redis:
+    image: redis:alpine
+    container_name: techzone_redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    networks:
+      - techzone
+
+networks:
+  techzone:
+    driver: bridge
+
+volumes:
+  mysql_data:
