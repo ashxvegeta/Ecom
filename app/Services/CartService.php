@@ -9,6 +9,9 @@ class CartService{
    public function add(int  $productId,int $quantity){
         $product = Product::with(['productItems','productImages','brand'])->findOrFail($productId);
         $productItem = $product->productItems->first();
+        if($productItem->stock<$quantity){
+            return false;
+        }
 
         if(auth()->check()) {
             $cartItem = Cart::where('user_id', auth()->id())

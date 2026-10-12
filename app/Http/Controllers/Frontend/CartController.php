@@ -45,7 +45,10 @@ class CartController extends Controller
     }
 
     public function addToCart(Request $request){
-        $this->cartService->add($request->product_id,$request->quantity ?? 1); 
+        $addedToCart =  $this->cartService->add($request->product_id,$request->quantity ?? 1); 
+        if(!$addedToCart){
+            return redirect()->back()->with('error','Out of stock!');
+        }
         return redirect()->back()->with('success','Product added to cart!');
     }
 

@@ -71,12 +71,15 @@
                 <hr style="border-color: #e5e5e5;">
 
                 {{-- Quantity --}}
-                <div class="mb-4">
-                    <label style="color: #1d1d1f; font-weight: 600; font-size: 14px;">Quantity</label>
-                   <div class="d-flex align-items-center mt-2">
-    @php
+                  @php
     $stock = $product->productItems->first()->stock;
     @endphp
+                <div class="mb-4">
+                    @if($stock>0)
+                    <label style="color: #1d1d1f; font-weight: 600; font-size: 14px;">Quantity</label>
+                    @endif  
+                   <div class="d-flex align-items-center mt-2">
+
     @if($stock>0)
     <button class="btn btn-outline-dark btn-sm qty-minus" 
             style="border-radius: 50%; width: 36px; height: 36px; padding: 0;">−</button>
