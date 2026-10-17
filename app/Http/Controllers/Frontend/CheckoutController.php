@@ -58,6 +58,9 @@ class CheckoutController extends Controller
         
 
         $order = $action->execute($request->validated());
+        // Payment ID save karo
+        $order->payment_id = $request->razorpay_payment_id;
+        $order->save();
         return redirect()->route('order.success', $order->id);
     }
 

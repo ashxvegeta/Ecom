@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\WebhookController;
 
 //Auth API complete
 Route::post('/register', [AuthController::class, 'register']);
@@ -34,6 +35,8 @@ Route::get('/products/{slug}', [ProductController::class, 'show']);
 Route::get('/categories', [CategoryController::class, 'index']);
 // brand API
 Route::get('/brands', [BrandController::class, 'index']);
+
+Route::post('/webhook/razorpay', [WebhookController::class, 'handle']);
 
 
 
