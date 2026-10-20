@@ -108,9 +108,9 @@
                         <i class="bi bi-bag"></i> {{ $stock > 0 ? 'Add to Cart' : 'Out of Stock' }}
                     </button>
                     @if($stock>0)  
-                    <button   class="btn btn-outline-dark btn-lg btn-block" style="border-radius: 25px; font-size: 16px; padding: 14px;">
-                        ⚡ Buy Now
-                    </button>
+<button type="submit" formaction="{{ route('buy.now') }}" class="btn btn-outline-dark btn-lg btn-block" style="border-radius: 25px; font-size: 16px; padding: 14px;">
+    ⚡ Buy Now
+</button>
                     @endif  
                       </form>
                 </div>

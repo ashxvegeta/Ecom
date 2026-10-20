@@ -84,6 +84,27 @@ class CartService{
 
    public function getCheckoutData(): array
 {
+   
+    if (session()->has('buy_now')) {
+        $buyNow = session()->get('buy_now');
+        $product = Product::with(['productImages', 'brand', 'productItems'])->find($buyNow['product_id']);
+        if ($product && $product->productItems->isNotEmpty()) {
+            $item = $product->productItems->first();
+            return [
+                [
+                    'product_id'      => $product->id,
+                    'product_item_id' => $item->id,
+                    'name'            => $product->name,
+                    'price'           => $item->price,
+                    'quantity'        => $buyNow['quantity'],
+                    'image'           => optional($product->productImages->first())->image_path ?? '',
+                    'brand'           => $product->brand->name ?? '',
+                ]
+            ];
+        }
+    }
+
+
     if(auth()->check()) {
        $cart = Cart::where('user_id', auth()->id())
             ->with(['product.productImages', 'product.brand', 'productItem'])
@@ -107,6 +128,24 @@ class CartService{
 }
     public function getCart(): Collection
     {
+
+    if (session()->has('buy_now')) {
+        $buyNow = session()->get('buy_now');
+        $product = Product::with(['productItems'])->find($buyNow['product_id']);
+        if ($product && $product->productItems->isNotEmpty()) {
+            $item = $product->productItems->first();
+            return collect([
+                [
+                    'product_id'      => $product->id,
+                    'product_item_id' => $item->id,
+                    'name'            => $product->name,
+                    'price'           => $item->price,
+                    'quantity'        => $buyNow['quantity'],
+                ]
+            ]);
+        }
+    }
+
         if(auth()->check()){
            return  Cart::where('user_id', auth()->id())->with(['product', 'productItem'])->get()
              ->map(function($item) {
@@ -135,6 +174,10 @@ class CartService{
 
     public function clearCart(?int $userId = null): void
     {
+        if (session()->has('buy_now')) {
+        session()->forget('buy_now');
+        return;
+    }
         session()->forget('cart');
 
         $userId = $userId ?? auth()->id();

@@ -13,8 +13,10 @@ use App\Actions\Order\PlaceOrderAction;
 use App\Http\Requests\PlaceOrderRequest;
 
 use App\Models\Order;
-
+    
 use Illuminate\Http\Request;
+
+use App\Models\Product;
 
 class CheckoutController extends Controller
 {
@@ -75,5 +77,33 @@ class CheckoutController extends Controller
             'key'      => config('services.razorpay.key_id'),
         ]);
     }
+
+    public function buyNow(Request $request)
+{
+    $request->validate([
+        'product_id' => 'required|exists:products,id',
+        'quantity'   => 'nullable|integer|min:1',
+    ]);
+
+    $productId = (int) $request->product_id;
+    $quantity  = (int) ($request->quantity ?? 1);
+
+    // Stock check
+    $product = Product::with('productItems')->findOrFail($productId);
+    $productItem = $product->productItems->first();
+
+    if (!$productItem || $productItem->stock < $quantity) {
+        return redirect()->back()->with('error', 'Product is out of stock!');
+    }
+
+    // Save only in temporary session (DO NOT touch database Cart)
+    session()->put('buy_now', [
+        'product_id' => $productId,
+        'quantity'   => $quantity,
+    ]);
+
+    return redirect()->route('checkout');
+}
+
 
 }

@@ -28,6 +28,7 @@ Route::get('/orders', function () {
 });
 
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+Route::post('/buy-now', [CheckoutController::class, 'buyNow'])->name('buy.now');
 Route::post('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 Route::get('/cart', [CartController::class, 'index']);
 Route::post('/cart/update', [CartController::class, 'updateQuantity'])->name('cart.update');
