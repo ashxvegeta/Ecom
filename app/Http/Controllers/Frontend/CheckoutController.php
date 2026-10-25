@@ -18,6 +18,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Product;
 
+use App\Services\SmsService;
+
 class CheckoutController extends Controller
 {
 
@@ -43,6 +45,11 @@ class CheckoutController extends Controller
         
         if($request->payment_method == 'cod') {
             $order = $action->execute($request->validated());
+            $sms = new SmsService();
+            $sms->sendSms(
+                $order->phone,
+                "Your order #{$order->order_number} has been placed successfully! Total: Rs. {$order->grand_total}. Thank you for shopping with TechZone."
+            );
             return redirect()->route('order.success', $order->id);
         }
         
@@ -63,6 +70,11 @@ class CheckoutController extends Controller
         // Payment ID save karo
         $order->payment_id = $request->razorpay_payment_id;
         $order->save();
+        $sms = new SmsService();
+        $sms->sendSms(
+            $order->phone,
+            "Your order #{$order->order_number} has been placed successfully! Total: Rs. {$order->grand_total}. Thank you for shopping with TechZone."
+        );
         return redirect()->route('order.success', $order->id);
     }
 

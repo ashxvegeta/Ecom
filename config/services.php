@@ -40,4 +40,10 @@ return [
     'key_secret' => env('RAZORPAY_KEY_SECRET'),
      ],
 
+     'twilio' => [
+    'sid'   => env('TWILIO_SID'),
+    'token' => env('TWILIO_TOKEN'),
+    'from'  => env('TWILIO_FROM'),
+],
+
 ];
