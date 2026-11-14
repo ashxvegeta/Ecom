@@ -111,8 +111,14 @@
 <button type="submit" formaction="{{ route('buy.now') }}" class="btn btn-outline-dark btn-lg btn-block" style="border-radius: 25px; font-size: 16px; padding: 14px;">
     ⚡ Buy Now
 </button>
-                    @endif  
+                    @endif
                       </form>
+
+                    <button type="button" class="btn btn-light btn-lg btn-block mt-3 add-to-shelf"
+                            data-product-id="{{ $product->id }}"
+                            style="border-radius: 25px; font-size: 16px; padding: 14px; border: 1px solid #e5e5e5; color: #1d1d1f;">
+                        <i class="bi bi-bookmark"></i> Add to Shelf
+                    </button>
                 </div>
 
                 <hr style="border-color: #e5e5e5;">
@@ -243,6 +249,87 @@ document.querySelectorAll('.qty-plus').forEach(function(btn) {
         hidden.value = input.value;
     });
 });
+
+
+
+
+(function () {
+    const btn = document.querySelector('.add-to-shelf');
+    if (!btn) return;
+
+    const productId = parseInt(btn.dataset.productId);
+    const isAuth = {{ auth()->check() ? 'true' : 'false' }};
+
+    function getLocalShelf() {
+        return JSON.parse(localStorage.getItem('shelf') || '[]');
+    }
+
+    function saveLocalShelf(ids) {
+        localStorage.setItem('shelf', JSON.stringify(ids));
+    }
+
+    function updateBtn(isSaved) {
+        if (isSaved) {
+            btn.innerHTML = '<i class="bi bi-bookmark-fill"></i> Saved to Shelf';
+            btn.style.color = '#0071e3';
+            btn.style.borderColor = '#0071e3';
+        } else {
+            btn.innerHTML = '<i class="bi bi-bookmark"></i> Add to Shelf';
+            btn.style.color = '#1d1d1f';
+            btn.style.borderColor = '#e5e5e5';
+        }
+    }
+
+    // Page load pe button state set karo
+    if (isAuth) {
+        fetch(`/shelf/check/${productId}`, {
+            headers: { 'Accept': 'application/json' }
+        })
+        .then(res => res.json())
+        .then(data => updateBtn(data.saved));
+    } else {
+        updateBtn(getLocalShelf().includes(productId));
+    }
+
+    // Click handler
+    btn.addEventListener('click', function () {
+        if (!isAuth) {
+            let ids = getLocalShelf();
+            const idx = ids.indexOf(productId);
+            if (idx === -1) {
+                ids.push(productId);
+                saveLocalShelf(ids);
+                updateBtn(true);
+            } else {
+                ids.splice(idx, 1);
+                saveLocalShelf(ids);
+                updateBtn(false);
+            }
+            if (window.setShelfBadge) window.setShelfBadge(ids.length);
+        } else {
+            const isSaved = btn.querySelector('.bi-bookmark-fill') !== null;
+            const url = `/shelf/${productId}`;
+            const method = isSaved ? 'DELETE' : 'POST';
+
+            fetch(url, {
+                method: method,
+                headers: {
+                   'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Request failed');
+                return res.json();
+            })
+            .then(() => {
+                updateBtn(!isSaved);
+                if (window.changeShelfBadge) window.changeShelfBadge(isSaved ? -1 : 1);
+            })
+            .catch(() => alert('Something went wrong!'));
+        }
+    });
+})();
 </script>
 @endsection 
 @endsection

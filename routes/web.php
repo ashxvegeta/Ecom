@@ -12,6 +12,7 @@ use App\Http\Controllers\Frontend\OrderController;
 use App\Http\Controllers\Frontend\NotificationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\ShelfController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -39,6 +40,10 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Guest ke liye
+Route::post('/shelf/fetch', [ShelfController::class, 'fetchByIds'])->name('shelf.fetch');
+Route::get('/shelf', [ShelfController::class, 'index'])->name('shelf.index');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -53,6 +58,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');   
     Route::post('/initiate-razorpay', [CheckoutController::class, 'initiateRazorpay'])->name('checkout.initiate-razorpay');
     Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder'])->name('orders.cancel');
+    Route::post('/shelf/sync', [ShelfController::class, 'sync'])->name('shelf.sync');
+    Route::get('/shelf/check/{product}', [ShelfController::class, 'check'])->name('shelf.check');
+    Route::post('/shelf/{product}', [ShelfController::class, 'store'])->whereNumber('product')->name('shelf.store');
+    Route::delete('/shelf/{product}', [ShelfController::class, 'destroy'])->whereNumber('product')->name('shelf.destroy');
 });
 Route::prefix('admin')->middleware('admin')->group(function() {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');

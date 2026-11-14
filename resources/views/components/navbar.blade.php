@@ -42,6 +42,19 @@
                     </div>
                 </form>
 
+                {{-- Shelf --}}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('shelf.index') }}" title="My Shelf" style="color: #f5f5f7;">
+                        <i class="bi bi-bookmark-heart"></i>
+                        @php
+                            $shelfcount = auth()->check()
+                                ? \App\Models\Shelf::where('user_id', auth()->id())->count()
+                                : 0; // guest count JS localStorage se set karega
+                        @endphp
+                        <span id="nav-shelf-badge" class="badge badge-light {{ $shelfcount > 0 ? '' : 'd-none' }}" style="font-size: 10px;">{{ $shelfcount }}</span>
+                    </a>
+                </li>
+
                 {{-- Cart --}}
                 <li class="nav-item">
                     <a class="nav-link" href="/cart" style="color: #f5f5f7;">
@@ -59,6 +72,8 @@
                         @endif
                     </a>
                 </li>
+
+                
 
                 @auth
                 {{-- Bell Notification --}}
@@ -129,9 +144,57 @@
     </div>
 </nav>
 
+<script>
+    // Shelf badge helpers — kisi bhi page se call kar sakte ho
+    window.setShelfBadge = function (count) {
+        var badge = document.getElementById('nav-shelf-badge');
+        if (!badge) return;
+        count = Math.max(0, parseInt(count) || 0);
+        badge.textContent = count;
+        badge.classList.toggle('d-none', count === 0);
+    };
+    window.changeShelfBadge = function (delta) {
+        var badge = document.getElementById('nav-shelf-badge');
+        if (!badge) return;
+        window.setShelfBadge((parseInt(badge.textContent) || 0) + delta);
+    };
+
+    @guest
+    // Guest: count localStorage se
+    (function () {
+        var ids;
+        try { ids = JSON.parse(localStorage.getItem('shelf') || '[]'); } catch (e) { ids = []; }
+        window.setShelfBadge(Array.isArray(ids) ? ids.length : 0);
+    })();
+    @endguest
+</script>
+
 @auth
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Login ke baad guest wali shelf (localStorage) ko DB mein sync karo
+        (function syncGuestShelf() {
+            var ids;
+            try { ids = JSON.parse(localStorage.getItem('shelf') || '[]'); } catch (e) { ids = []; }
+            if (!Array.isArray(ids) || ids.length === 0) return;
+
+            fetch('{{ route('shelf.sync') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ product_ids: ids })
+            })
+            .then(function (res) {
+                if (!res.ok) throw new Error('Sync failed');
+                localStorage.removeItem('shelf');
+                window.location.reload(); // shelf list aur badge refresh
+            })
+            .catch(function () {});
+        })();
+
         function refreshNotificationBadge() {
             fetch('{{ route('notifications.unreadCount') }}')
                 .then(function(res) {
